@@ -1,0 +1,22 @@
+# ビルド出力フォルダ
+bin/
+target/
+.metadata
+
+# 一時ファイルやクラスファイル
+*.class
+*.jar
+*.zip
+
+!docs/**/*.jar
+
+# OS固有の隠しファイル
+.DS_Store
+Thumbs.db
+
+# 注意: 以下のファイル/フォルダはプラグイン開発に必須のため「除外しない」
+# META-INF/
+# build.properties
+# plugin.xml
+# .project
+# .classpath

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>jhappyloveany</groupId>
+    <artifactId>jhappyloveany.parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <tycho-version>4.0.7</tycho-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <modules>
+        <module>com.jhappy.jhappyloveany</module>
+        <module>com.jhappy.jhappyloveany.client</module>
+        <module>com.jhappy.jhappyloveany.feature</module>
+        <module>com.jhappy.jhappyloveany</module>
+        <module>com.jhappy.jhappyloveany.updatesite</module>
+        <module>com.jhappy.jhappyloveany.test</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>eclipse-latest</id>
+            <layout>p2</layout>
+            <url>https://download.eclipse.org/releases/latest/</url>
+        </repository>
+       <repository>
+  <id>orbit</id>
+  <layout>p2</layout>
+  <url>https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/latest</url>
+</repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                    <environments>
+                        <environment>
+                            <os>win32</os>
+                            <ws>win32</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>linux</os>
+                            <ws>gtk</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>macosx</os>
+                            <ws>cocoa</ws>
+                            <arch>aarch64</arch>
+                        </environment>
+                    </environments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

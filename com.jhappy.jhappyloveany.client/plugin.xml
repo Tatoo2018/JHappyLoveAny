@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.eclipse.lsp4e.languageServer">
+	  <server
+	        class="com.jhappy.jhappyloveany.client.JHappyLSPConnectionProvider"
+	        id="com.jhappy.jhappyloveany"
+	        label="jHappy JDT Language Server" forced="true">
+	  </server>
+	  
+	<contentTypeMapping
+	        contentType="org.eclipse.jdt.core.javaSource"
+	        id="com.jhappy.jhappyloveany">
+	</contentTypeMapping>
+	<contentTypeMapping
+	        contentType="org.eclipse.core.runtime.text"
+	        id="com.jhappy.jhappyloveany">
+	</contentTypeMapping>
+	</extension>
+
+</plugin>

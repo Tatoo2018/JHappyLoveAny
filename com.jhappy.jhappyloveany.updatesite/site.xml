@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/con.jhappy.jhappyloveany.feature_1.0.0.202603022212.jar" id="con.jhappy.jhappyloveany.feature" version="1.0.0.202603022212">
+      <category name="tool"/>
+   </feature>
+   <category-def name="tool" label="TOOL"/>
+</site>
