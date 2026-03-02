@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionOptions;
@@ -118,7 +119,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 		//Enable code completion
 		CompletionOptions completionOptions = new CompletionOptions();
-		completionOptions.setTriggerCharacters(java.util.List.of("\"", "."));
+		completionOptions.setTriggerCharacters(java.util.Arrays.asList("\"", "."));
 		capabilities.setCompletionProvider(completionOptions);
 
 		//
@@ -174,7 +175,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 				//Setting for hover
 				TextDocumentRegistrationOptions hoverOptions = new TextDocumentRegistrationOptions();
-				hoverOptions.setDocumentSelector(List.of(
+				hoverOptions.setDocumentSelector(java.util.Arrays.asList(
 						new DocumentFilter("java", null, null),
 						new DocumentFilter("properties", null, null)));
 				registrations.add(new Registration(
@@ -271,7 +272,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 				List<QueryConfig> configs = querySetting.configs;
 
-				try (var stream = Files.walk(rootPath)) {
+				try (Stream<Path> stream = Files.walk(rootPath)) {
 					stream
 							.filter(path -> {
 

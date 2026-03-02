@@ -1,5 +1,6 @@
 package com.jhappy.jdt.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.text.translate.AggregateTranslator;
@@ -11,18 +12,23 @@ import org.apache.commons.text.translate.LookupTranslator;
  */
 public class StringUtils {
 
-	// Javaリテラルに必要な最小限のエスケープだけを行うトランスレータ
-	private static final CharSequenceTranslator CUSTOM_JAVA_ESCAPER = new AggregateTranslator(
-			new LookupTranslator(Map.of(
-					"\"", "\\\"", // ダブルクォート -> \"
-					"\\", "\\\\", // バックスラッシュ -> \\
-					"\b", "\\b", // バックスペース
-					"\n", "\\n", // 改行
-					"\r", "\\r", // 復帰
-					"\f", "\\f", // フォームフィード
-					"\t", "\\t" // タブ
-			)));
+	// Java 8互換の静的初期化ブロックを使用してトランスレータを作成
+    private static final CharSequenceTranslator CUSTOM_JAVA_ESCAPER;
 
+    static {
+        Map<CharSequence, CharSequence> lookupMap = new HashMap<>();
+        lookupMap.put("\"", "\\\""); // ダブルクォート -> \"
+        lookupMap.put("\\", "\\\\"); // バックスラッシュ -> \\
+        lookupMap.put("\b", "\\b");   // バックスペース
+        lookupMap.put("\n", "\\n");   // 改行
+        lookupMap.put("\r", "\\r");   // 復帰
+        lookupMap.put("\f", "\\f");   // フォームフィード
+        lookupMap.put("\t", "\\t");   // タブ
+
+        CUSTOM_JAVA_ESCAPER = new AggregateTranslator(
+                new LookupTranslator(lookupMap)
+        );
+    }
 	/**
 	 * @param input
 	 * @return

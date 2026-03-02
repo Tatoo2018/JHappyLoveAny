@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: com.jhappy.jhappyloveany.test;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: JHAPPY
-Fragment-Host: com.jhappy.jhappyloveany.client;bundle-version="1.0.0"
+Fragment-Host: com.jhappy.jhappyloveany.client
 Require-Bundle: org.eclipse.jdt,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,

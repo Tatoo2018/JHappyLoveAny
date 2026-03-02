@@ -1,5 +1,7 @@
 package com.jhappy.jdt.lsp.setting;
 
+import java.util.stream.Collectors;
+
 /**
  * 
  */
@@ -20,7 +22,7 @@ public class QueryConfig {
 		this.data.xpaths = java.util.Arrays.stream(xpathContent.split("\n"))
 				.map(String::trim)
 				.filter(s -> !s.isEmpty())
-				.toList();
+				.collect(Collectors.toList());
 		this.data.trim = trim;
 		this.data.type = type;
 		this.data.searchRootPath = searchRootPath;

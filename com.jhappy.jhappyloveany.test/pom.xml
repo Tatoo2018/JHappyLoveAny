@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>com.jhappy.jhappyloveany.test</artifactId>
+  <packaging>eclipse-test-plugin</packaging>
+  
+        <parent>
+        <groupId>jhappyloveany</groupId>
+        <artifactId>jhappyloveany.parent</artifactId>
+       <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    	<properties>
+    <mac.specific.args></mac.specific.args>
+</properties>
+    
+    <profiles>
+    <profile>
+    <!--
+			These arguments are necessary to execute JUnit tests on my local Mac, 
+			but they cause errors on GitHub Actions (Linux). 
+			Therefore, the configuration is split to change depending on the environment.
+		-->
+        <id>mac-os-config</id>
+        <activation>
+            <os><family>mac</family></os>
+        </activation>
+        <properties>
+            <mac.specific.args>-XstartOnFirstThread --add-opens=java.desktop/com.apple.laf=ALL-UNNAMED --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED</mac.specific.args>
+        </properties>
+    </profile>
+</profiles>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<showSuccess>true</showSuccess>
+					<printSummary>true</printSummary>
+					<failIfNoTests>true</failIfNoTests>
+
+					<useUIThread>true</useUIThread>
+					<useUIHarness>true</useUIHarness>
+					<providerHint>junit5</providerHint>
+
+					<argLine>-Xmx1024m --add-modules=ALL-SYSTEM --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED ${mac.specific.args}</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
