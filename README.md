@@ -59,8 +59,6 @@ This repository uses a multi-module configuration powered by **Maven / Tycho**.
 
 ### 🛠️ Build Instructions
 
-**Java 21** and **Maven** are required for building.
-
 ```bash
 # Build all modules and run tests
 mvn clean verify
@@ -101,8 +99,6 @@ mvn clean verify
 | `com.jhappy.jhappyloveany.test` | UI および統合テスト (SWTBot / JUnit 5) |
 
 ### 🛠️ ビルド方法
-
-ビルドには **Java 21** と **Maven** が必要です。
 
 ```bash
 # 全モジュールのビルドとテストの実行
@@ -145,8 +141,6 @@ mvn clean verify
 | `com.jhappy.jhappyloveany.test` | UI 及集成测试 (SWTBot / JUnit 5) |
 
 ### 🛠️ 构建方法
-
-构建需要 **Java 21** 和 **Maven**。
 
 ```bash
 # 构建所有模块并运行测试
