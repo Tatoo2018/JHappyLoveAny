@@ -1,6 +1,6 @@
 # 🚀 JHappyLoveAny
 
-[![pages-build-deployment](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/pages/pages-build-deployment)
+[![Build and Deploy Update Site](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml)(https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/pages/pages-build-deployment)
 ![License](https://img.shields.io/github/license/Tatoo2018/JHappyLoveAny)
 ![Version](https://img.shields.io/badge/version-0.0.1-blue)
 
