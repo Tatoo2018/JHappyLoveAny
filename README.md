@@ -10,7 +10,7 @@
 
 ## 🇺🇸 English
 
-**JHappyLoveAny** is a **Language Server Protocol (LSP)** based plugin for the Eclipse IDE that provides powerful auto-completion and navigation for keys defined in `.properties` and XML files directly within Java source code.
+**JHappyLoveAny** is a **Language Server Protocol (LSP)** based plugin for the Eclipse IDE that provides powerful auto-completion and navigation for keys defined in `.properties` and `.xml` directly within Java source code.
 
 It eliminates the hassle of searching for key definitions manually, significantly boosting coding productivity.
 
@@ -65,16 +65,19 @@ mvn clean verify
 
 ## 🇯🇵 日本語
 
-**JHappyLoveAny** は、Eclipse IDE 上でプロパティファイル（`.properties`）や XML ファイルで定義されたキーを、Java ソースコード内で強力に補完・ナビゲートするための **Language Server Protocol (LSP)** ベースのプラグインです。
+**JHappyLoveAny** は、Eclipse IDE 上で`プロパティファイル` や `XML ファイル`で定義されたキーを、Java ソースコード内で強力に補完・ナビゲートするための **Language Server Protocol (LSP)** ベースのプラグインです。
 
 開発者がキーの定義場所を探し回る手間を省き、コーディングの生産性を大幅に向上させます。
 
 ### 🌟 主な機能
 
-- **🧠 インテリジェントな補完**: 文字列リテラル内 (`""`) で `Ctrl + Space` を押すと、定義済みのキーを自動補完します。
-- **📍 定義へのジャンプ**: キーの上で `Ctrl + クリック` (または `F3`) を押すと、プロパティファイルや XML ファイル内の定義場所へ直接ジャンプします。
-- **ℹ️ ホバー情報**: キーの上にマウスを置くと、その値や定義場所の詳細をポップアップ表示します。
-- **⚡ 自動スキャン**: バックグラウンドでプロジェクト内のすべてのリソースファイルを自動的にインデックス化し、高速な動作を実現します。
+- **🧠 インテリジェントな補完:** 文字列リテラル (`""`) 内で `Ctrl + Space` を押すと、定義済みのキーを自動補完します。
+- **📍 定義へのジャンプ:** キーの上で `Ctrl + Click` (または `F3`) を押すと、`.properties` や XML ファイル内の定義場所へ直接ジャンプします。
+- **ℹ️ ホバー情報:** キーの上にカーソルを合わせると、その値や定義の詳細をポップアップ表示します。
+- **⚡ 自動スキャン:** バックグラウンドでプロジェクト内の全リソースファイルを自動的にインデックス化し、高速な動作を実現します。
+- **🔧 解析対象のカスタマイズ:** `正規表現` を使用して解析対象ファイルを指定でき、独自のディレクトリ構成にも柔軟に対応します。(例: `src/.*\.xml$`)
+- **📝 XPath サポート:** `XPath` を使用して解析対象の XML 属性を指定でき、独自の XML 定義 (スキーマ) に柔軟に対応します。(例: `//@name`)
+- **🔀 柔軟なマッチング:** 自動補完の挙動を、前方一致 (`prefix`) か 部分一致 (`contains`) かで切り替えることができます。
 
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
@@ -112,10 +115,13 @@ mvn clean verify
 
 ### 🌟 主要功能
 
-- **🧠 智能补全**: 在字符串字面量 (`""`) 中按下 `Ctrl + Space`，即可自动补全已定义的键。
-- **📍 跳转定义**: 在键名上按下 `Ctrl + 单击` (或 `F3`)，可直接跳转到属性文件或 XML 文件中的对应定义行。
-- **ℹ️ 悬停信息**: 将光标悬停在键名上，弹出窗口将显示其值和定义详情。
-- **⚡ 自动扫描**: 在后台自动索引项目中的所有资源文件，实现高速运行。
+- **🧠 智能补全:** 在字符串字面量 (`""`) 中按下 `Ctrl + Space`，即可自动补全预定义的键。
+- **📍 跳转到定义:** 在键上按下 `Ctrl + 单击` (或 `F3`)，可直接跳转到 `.properties` 或 XML 文件中的定义位置。
+- **ℹ️ 悬停提示:** 将鼠标悬停在键上，会以弹窗形式显示其值和定义的详细信息。
+- **⚡ 自动扫描:** 在后台自动索引项目中的所有资源文件，实现高速运行。
+- **🔧 自定义解析目标:** 支持使用 `正则表达式` 指定解析目标文件，灵活适配自定义的目录结构。(例如: `src/.*\.xml$`)
+- **📝 XPath 支持:** 支持使用 `XPath` 指定解析目标 XML 属性，灵活适配自定义的 XML 定义 (Schema)。(例如: `//@name`)
+- **🔀 灵活匹配:** 可以在前缀匹配 (`prefix`) 或包含匹配 (`contains`) 之间切换自动补全模式。
 
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
