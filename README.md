@@ -21,6 +21,12 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **ℹ️ Hover Information**: Hover over a key to view its value and definition details in a popup.
 - **⚡ Auto Scan**: Automatically indexes all resource files in the project in the background for high performance.
 
+### 🔗 Update Site URLs
+| Environment | Branch | Eclipse Update Site URL |
+| :--- | :--- | :--- |
+| **Stable** | `main` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/main/` |
+| **Development** | `develop` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/develop/` |
+
 ### 🏗️ Project Structure
 
 This repository uses a multi-module configuration powered by **Maven / Tycho**.
@@ -54,6 +60,12 @@ mvn clean verify
 - **📍 定義へのジャンプ**: キーの上で `Ctrl + クリック` (または `F3`) を押すと、プロパティファイルや XML ファイル内の定義場所へ直接ジャンプします。
 - **ℹ️ ホバー情報**: キーの上にマウスを置くと、その値や定義場所の詳細をポップアップ表示します。
 - **⚡ 自動スキャン**: バックグラウンドでプロジェクト内のすべてのリソースファイルを自動的にインデックス化し、高速な動作を実現します。
+
+### 🔗 Update Site URLs
+| Environment | Branch | Eclipse Update Site URL |
+| :--- | :--- | :--- |
+| **Stable** | `main` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/main/` |
+| **Development** | `develop` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/develop/` |
 
 ### 🏗️ プロジェクト構造
 
@@ -89,6 +101,12 @@ mvn clean verify
 - **📍 跳转定义**: 在键名上按下 `Ctrl + 单击` (或 `F3`)，可直接跳转到属性文件或 XML 文件中的对应定义行。
 - **ℹ️ 悬停信息**: 将光标悬停在键名上，弹出窗口将显示其值和定义详情。
 - **⚡ 自动扫描**: 在后台自动索引项目中的所有资源文件，实现高速运行。
+
+### 🔗 Update Site URLs
+| Environment | Branch | Eclipse Update Site URL |
+| :--- | :--- | :--- |
+| **Stable** | `main` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/main/` |
+| **Development** | `develop` | `https://tatoo2018.github.io/JHappyLoveAny/updatesite/develop/` |
 
 ### 🏗️ 项目结构
 
