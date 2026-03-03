@@ -46,6 +46,7 @@
 					<useUIThread>true</useUIThread>
 					<useUIHarness>true</useUIHarness>
 					<providerHint>junit5</providerHint>
+					
 
 					<argLine>-Xmx1024m --add-modules=ALL-SYSTEM --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED ${mac.specific.args}</argLine>
 				</configuration>

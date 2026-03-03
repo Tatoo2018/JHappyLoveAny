@@ -29,7 +29,9 @@ jobs:
       - name: Build with Maven
         run: xvfb-run mvn clean verify
         env:
-          # ローカルで突破したXML制限解除の呪文
+          # localのmacでテストを実行すると警告メッセージのようなものがでる。無視できるもだが、これを設定することでログが表示されるので念の為設定,GitHub上ではmacでテストしない限り関係ない
+          CORESVG_VERBOSE: "1"
+          # 巨大なEclipseリポジトリを解析すると解析可能な最大容量をこえるので、その設定をなしにリポジトリを使用可能にする
           MAVEN_OPTS: >-
             -Djdk.xml.maxGeneralEntitySizeLimit=0
             -Djdk.xml.totalEntitySizeLimit=0

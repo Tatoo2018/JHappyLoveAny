@@ -1,5 +1,7 @@
 package com.jhappy.jdt.lsp;
 
+import java.util.concurrent.Future;
+
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -22,9 +24,17 @@ public class JHappyLauncher {public static void main(String[] args) {
         // エディタ側のプロキシをサーバーに渡す
         server.connect(launcher.getRemoteProxy());
 
-        // ★ 重要：startListening() の Future を取得して get() で待機する
-        // これにより、クライアントが接続を切るまで Java プロセスが終了しなくなります
-        launcher.startListening().get(); 
+        Future<Void> listening = launcher.startListening();
+
+        try {
+            // クライアントが切断するまでここでブロック（待機）
+            listening.get(); 
+        } finally {
+            // ★ 重要：テスト終了後にプロセスが残らないよう、明示的に終了を指示
+            System.err.println("LSP Server is shutting down...");
+            System.exit(0);
+        }
+        
 
     } catch (Exception e) {
         e.printStackTrace(System.err);

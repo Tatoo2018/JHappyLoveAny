@@ -175,8 +175,8 @@ class UIperformTest extends UiTest {
 					}
 				}
 
-				// 2. LSPサーバーの準備を待つ (スキャン完了待ち)
-				Thread.sleep(3000);
+				// 
+				Thread.sleep(1000);
 
 			} catch (Exception e) {
 				e.printStackTrace();
