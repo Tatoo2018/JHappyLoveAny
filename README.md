@@ -30,7 +30,7 @@ It eliminates the hassle of searching for key definitions manually, significantl
 
 ![screenshot3](https://github.com/user-attachments/assets/bf85f45f-743c-455e-8fc0-6c34fa747b6e)
 
-![screenshot4](https://github.com/user-attachments/assets/2e3d34ba-cd96-47cc-9f41-6f891b5164ba)
+![screenshot4](https://github.com/user-attachments/assets/ec70db99-0472-4ae8-9d61-b5b79cd804d4)
 
 ![screenshot5](https://github.com/user-attachments/assets/55e33219-a7c3-44b6-b67e-1a195e20b331)
 
