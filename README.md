@@ -4,33 +4,39 @@
 ![License](https://img.shields.io/github/license/Tatoo2018/JHappyLoveAny)
 ![Version](https://img.shields.io/badge/version-0.0.1-blue)
 
-**JHappyLoveAny** は、Eclipse IDE 上でプロパティファイル（`.properties`）や XML ファイルで定義されたキーを、Java ソースコード内で強力に補完・ナビゲートするための **Language Server Protocol (LSP)** ベースのプラグインです。
+[🇺🇸 English](#-english) | [🇯🇵 日本語](#-日本語) | [🇨🇳 简体中文](#-简体中文)
 
-開発者がキーの定義場所を探し回る手間を省き、コーディングの生産性を向上させます。
+---
 
+## 🇺🇸 English
 
-## 🌟 主な機能
+**JHappyLoveAny** is a **Language Server Protocol (LSP)** based plugin for the Eclipse IDE that provides powerful auto-completion and navigation for keys defined in `.properties` and XML files directly within Java source code.
 
-- **🧠 インテリジェントな補完**: 文字列リテラル内 (`""`) で `Ctrl + Space` を押すと、定義済みのキーを自動補完します。
-- **jump 定義へのジャンプ**: `Ctrl + クリック` (または `F3`) で、キーが定義されているプロパティファイルや XML の該当行へ直接ジャンプします。
-- **ℹ️ ホバー情報**: キーの上にカーソルを置くと、その値や定義場所の詳細をポップアップ表示します。
-- **⚡ 自動スキャン**: プロジェクト内の全リソースファイルをバックグラウンドで高速にインデックス化します。
+It eliminates the hassle of searching for key definitions manually, significantly boosting coding productivity.
 
-## 🏗️ プロジェクト構造
+### 🌟 Key Features
 
-本リポジトリは **Maven / Tycho** を利用したマルチモジュール構成になっています。
+- **🧠 Intelligent Completion**: Press `Ctrl + Space` inside string literals (`""`) to auto-complete defined keys.
+- **Run Jump to Definition**: `Ctrl + Click` (or `F3`) on a key to jump directly to its definition in the properties or XML file.
+- **ℹ️ Hover Information**: Hover over a key to view its value and definition details in a popup.
+- **⚡ Auto Scan**: Automatically indexes all resource files in the project in the background for high performance.
 
-| モジュール名 | 役割 |
+### 🏗️ Project Structure
+
+This repository uses a multi-module configuration powered by **Maven / Tycho**.
+
+| Module Name | Role |
 | :--- | :--- |
-| `com.jhappy.jhappyloveany` | **LSP サーバー本体** (Pure Java / LSP4J) |
-| `com.jhappy.jhappyloveany.client` | **Eclipse プラグイン** (LSP4E クライアント) |
-| `com.jhappy.jhappyloveany.feature` | Eclipse Feature プロジェクト |
-| `com.jhappy.jhappyloveany.updatesite` | P2 リポジトリ (更新サイト) 生成用 |
-| `com.jhappy.jhappyloveany.test` | UI および統合テスト (SWTBot / JUnit 5) |
+| `com.jhappy.jhappyloveany` | **LSP Server Core** (Pure Java / LSP4J) |
+| `com.jhappy.jhappyloveany.client` | **Eclipse Plugin** (LSP4E Client) |
+| `com.jhappy.jhappyloveany.feature` | Eclipse Feature Project |
+| `com.jhappy.jhappyloveany.updatesite` | P2 Repository (Update Site) Generation |
+| `com.jhappy.jhappyloveany.test` | UI and Integration Tests (SWTBot / JUnit 5) |
 
-## 🛠️ ビルド方法
+### 🛠️ Build Instructions
 
+**Java 21** and **Maven** are required for building.
 
 ```bash
-# 全モジュールのビルドとテストの実行
+# Build all modules and run tests
 mvn clean verify
