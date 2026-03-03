@@ -21,6 +21,11 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **ℹ️ Hover Information**: Hover over a key to view its value and definition details in a popup.
 - **⚡ Auto Scan**: Automatically indexes all resource files in the project in the background for high performance.
 
+![screenshot5](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
+
+
+
+
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
 | :--- | :--- | :--- |
