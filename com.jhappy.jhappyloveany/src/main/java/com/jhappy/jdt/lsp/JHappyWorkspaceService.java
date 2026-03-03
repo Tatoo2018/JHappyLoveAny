@@ -18,7 +18,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import com.jhappy.jdt.lsp.properties.PropertiesScanner;
 import com.jhappy.jdt.lsp.setting.QueryConfig;
 import com.jhappy.jdt.lsp.setting.QuerySetting;
-import com.jhappy.jdt.lsp.xml.XmlScanner;
+import com.jhappy.jdt.lsp.xml.JHappyXmlScanner;
 import com.jhappy.jdt.util.EclipseUtil;
 
 /**
@@ -88,7 +88,7 @@ public class JHappyWorkspaceService implements WorkspaceService {
 						//
 						if (lowerUri.endsWith(".xml")) {
 							
-							List<DataEntry> entries = XmlScanner.loadXmlFile(filePath, projectUri, configs);
+							List<DataEntry> entries = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
 							if (entries != null && !entries.isEmpty()) {
 								server.getFilePropertyCache().put(absolutePath, entries);
 							}

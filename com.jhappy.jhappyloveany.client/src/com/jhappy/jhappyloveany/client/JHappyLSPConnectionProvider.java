@@ -19,10 +19,16 @@ public class JHappyLSPConnectionProvider extends ProcessStreamConnectionProvider
         // これにより、OSへのインストール状況に関わらず、Eclipseが動いているJavaで起動できます
         String javaHome = System.getProperty("java.home");
         String javaExecutable = javaHome + File.separator + "bin" + File.separator + "java";
-        System.out.println(javaExecutable);
 
         commands.add(javaExecutable);
-        commands.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000");
+        
+     // ★ システムプロパティ "jhappy.debug" が "true" の場合のみデバッグ有効
+        if (Boolean.getBoolean("jhappy.debug")) {
+            // ポート8000で待機。suspend=yにすると接続されるまで停止、nならそのまま起動
+            commands.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000");
+            System.out.println("★ LSP Server Debug Mode ENABLED on port 8000 ★");
+        }
+        
         commands.add("-jar");
         // JARのパス
         String jarPath = getBundleFilePath("lib/com.jhappy.jhappyloveany-version-jar-with-dependencies.jar");
@@ -36,7 +42,8 @@ public class JHappyLSPConnectionProvider extends ProcessStreamConnectionProvider
     private String getBundleFilePath(String relativePath) {
         Bundle bundle = FrameworkUtil.getBundle(this.getClass());
         try {
-            // relativePath に対する URL を取得
+            
+        	//
             java.net.URL bundleUrl = bundle.getEntry(relativePath);
             if (bundleUrl == null) {
                 System.err.println("Resource not found: " + relativePath);

@@ -44,7 +44,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import com.jhappy.jdt.lsp.properties.PropertiesScanner;
 import com.jhappy.jdt.lsp.setting.QueryConfig;
 import com.jhappy.jdt.lsp.setting.QuerySetting;
-import com.jhappy.jdt.lsp.xml.XmlScanner;
+import com.jhappy.jdt.lsp.xml.JHappyXmlScanner;
 import com.jhappy.jdt.util.EclipseUtil;
 
 /**
@@ -292,7 +292,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 								String absolutePath = path.toAbsolutePath().toString();
 								
 								if (path.toString().toLowerCase().endsWith(".xml")) {
-									List<DataEntry> entries = XmlScanner.loadXmlFile(path, rootPath, configs);
+									List<DataEntry> entries = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
 									if (entries != null && !entries.isEmpty()) {
 										filePropertyCache.put(absolutePath, entries);
 									}
