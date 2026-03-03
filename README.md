@@ -23,8 +23,15 @@ It eliminates the hassle of searching for key definitions manually, significantl
 
 ![screenshot5](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
 
+![screenshot4](https://github.com/user-attachments/assets/8e6f3883-22ae-48fa-926e-de30af7ccbed)
 
+![screenshot2](https://github.com/user-attachments/assets/bf85f45f-743c-455e-8fc0-6c34fa747b6e)
 
+![screenshot3](https://github.com/user-attachments/assets/2e3d34ba-cd96-47cc-9f41-6f891b5164ba)
+
+![screenshot1](https://github.com/user-attachments/assets/55e33219-a7c3-44b6-b67e-1a195e20b331)
+
+![screenshot6](https://github.com/user-attachments/assets/7970ee69-9442-4319-820d-53666e2f5f0e)
 
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
