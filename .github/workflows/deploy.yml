@@ -44,7 +44,7 @@ jobs:
           # GitHub Pages のベースURLを構築
           HOME_URL="https://${{ github.repository_owner }}.github.io/${REPO_NAME}/"
 
-          cat << 'EOF' > com.jhappy.jhappyloveany.updatesite/target/repository/index.html
+          cat << EOF > com.jhappy.jhappyloveany.updatesite/target/repository/index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
