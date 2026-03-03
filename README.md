@@ -40,7 +40,7 @@ This repository uses a multi-module configuration powered by **Maven / Tycho**.
 ```bash
 # Build all modules and run tests
 mvn clean verify
-
+```
 
 ## 🇯🇵 日本語
 
@@ -74,6 +74,8 @@ mvn clean verify
 ```bash
 # 全モジュールのビルドとテストの実行
 mvn clean verify
+```
+
 
 ## 🇨🇳 简体中文
 
