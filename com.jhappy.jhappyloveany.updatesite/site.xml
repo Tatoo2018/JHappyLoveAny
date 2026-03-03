@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.jhappy.jhappyloveany.feature_0.0.1.qualifier.jar" id="com.jhappy.jhappyloveany.feature" version="0.0.1.qualifier">
+   <description name="JHappyAnyLove">
+      This is JHappyAnyLove update site
+   </description>
+   <feature url="features/com.jhappy.jhappyloveany.feature_0.0.1.202603031110.jar" id="com.jhappy.jhappyloveany.feature" version="0.0.1.202603031110">
       <category name="tool"/>
    </feature>
    <category-def name="tool" label="TOOL"/>

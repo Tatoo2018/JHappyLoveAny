@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JHappyLoveAny
+Bundle-Name: JHappyLoveAnyClient
 Bundle-SymbolicName: com.jhappy.jhappyloveany.client;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: JHAPPY
