@@ -41,6 +41,7 @@ This repository uses a multi-module configuration powered by **Maven / Tycho**.
 # Build all modules and run tests
 mvn clean verify
 
+
 ## 🇯🇵 日本語
 
 **JHappyLoveAny** は、Eclipse IDE 上でプロパティファイル（`.properties`）や XML ファイルで定義されたキーを、Java ソースコード内で強力に補完・ナビゲートするための **Language Server Protocol (LSP)** ベースのプラグインです。
