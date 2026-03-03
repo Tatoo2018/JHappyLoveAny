@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 
 
-@DisplayName("Integration Test: Real Java Project Operations")
+@DisplayName("Integration Test:UiTest")
  class UiTest {
 
     public IProject project;

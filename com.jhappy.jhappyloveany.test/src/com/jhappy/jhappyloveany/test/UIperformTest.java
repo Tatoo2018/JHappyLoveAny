@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.osgi.framework.Bundle;
 
-@DisplayName("UI Test: Command Execution")
+@DisplayName("UI Test: UIperformTest")
 class UIperformTest extends UiTest {
 
 	@Test

@@ -151,7 +151,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 		try {
 
 			// Issue #547 対策: LSP4E側の準備が整うまで2秒待機
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 
 			if (client != null) {
 

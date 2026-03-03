@@ -25,7 +25,7 @@ public class JHappyLSPConnectionProvider extends ProcessStreamConnectionProvider
         commands.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000");
         commands.add("-jar");
         // JARのパス
-        String jarPath = getBundleFilePath("lib/com.jhappy.jhappyloveany-0.0.1-SNAPSHOT-jar-with-dependencies.jar");
+        String jarPath = getBundleFilePath("lib/com.jhappy.jhappyloveany-version-jar-with-dependencies.jar");
         commands.add(jarPath);
 
         setCommands(commands);
