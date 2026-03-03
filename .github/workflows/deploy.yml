@@ -39,13 +39,18 @@ jobs:
             
       - name: 📄 Create Info HTML for Browser Access
         run: |
+          # リポジトリ名 (例: JHappyLoveAny) を取得
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          # GitHub Pages のベースURLを構築
+          HOME_URL="https://${{ github.repository_owner }}.github.io/${REPO_NAME}/"
+
           cat << 'EOF' > com.jhappy.jhappyloveany.updatesite/target/repository/index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Eclipse Update Site - JHappy4AI</title>
+              <title>Eclipse Update Site - ${REPO_NAME}</title>
               <style>
                   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
                   .card { background: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; width: 100%; text-align: center; border-top: 5px solid #3498db; }
@@ -73,7 +78,7 @@ jobs:
                       <p><strong>🇨🇳 简体中文:</strong><br>这是一个 <strong>Eclipse 更新站点 (Update Site)</strong>。它不适合在浏览器中查看。<br>请复制此 URL 并将其粘贴到 Eclipse 的 <em>“安装新软件...”</em> 对话框中以安装插件。</p>
                   </div>
 
-                  <a href="https://tatoo2018.github.io/JHappy4AI/" class="home-btn">🏠 Go to JHappy4AI Homepage</a>
+                  <a href="${HOME_URL}" class="home-btn">🏠 Go to ${REPO_NAME} Homepage</a>
               </div>
           </body>
           </html>
