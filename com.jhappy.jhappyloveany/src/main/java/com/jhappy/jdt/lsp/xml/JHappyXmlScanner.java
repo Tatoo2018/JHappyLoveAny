@@ -38,9 +38,13 @@ public class JHappyXmlScanner {
 			List<String> matchedXpathList = filterXPathList(configs, relativePath);
 
 			// scan xml file
-			List<DataEntry> newEntries = JHappyXmlScanner.scan(path, matchedXpathList);
+			if(0 < matchedXpathList.size()) {
+				List<DataEntry> newEntries = JHappyXmlScanner.scan(path, matchedXpathList);
+				return newEntries;
+			}
+			
 
-			return newEntries;
+			return null;
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -283,26 +283,26 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 										return false;
 									}
 								}
-								String name = path.toString().toLowerCase();
-								return name.endsWith(".properties") || name.endsWith(".xml");
-
+							//	String name = path.toString().toLowerCase();
+							//	return name.endsWith(".properties") || name.endsWith(".xml");
+								return true;
 							})
 							.forEach(path -> {
 
 								String absolutePath = path.toAbsolutePath().toString();
 								
-								if (path.toString().toLowerCase().endsWith(".xml")) {
-									List<DataEntry> entries = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
-									if (entries != null && !entries.isEmpty()) {
-										filePropertyCache.put(absolutePath, entries);
+								//if (path.toString().toLowerCase().endsWith(".xml")) {
+									List<DataEntry> entriesXml = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
+									if (entriesXml != null && !entriesXml.isEmpty()) {
+										filePropertyCache.put(absolutePath, entriesXml);
 									}
-								} else {
-									List<DataEntry> entries = PropertiesScanner.loadPropertyFile(path, rootPath,
+							//	} else {
+									List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(path, rootPath,
 											configs);
-									if (entries != null && !entries.isEmpty()) {
-										filePropertyCache.put(absolutePath, entries);
+									if (entriesProperties != null && !entriesProperties.isEmpty()) {
+										filePropertyCache.put(absolutePath, entriesProperties);
 									}
-								}
+								//}
 							});
 				}
 			}
