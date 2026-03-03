@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/maven.yml/badge.svg)
 ![License](https://img.shields.io/github/license/Tatoo2018/JHappyLoveAny)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-0.0.1-blue)
 
 **JHappyLoveAny** は、Eclipse IDE 上でプロパティファイル（`.properties`）や XML ファイルで定義されたキーを、Java ソースコード内で強力に補完・ナビゲートするための **Language Server Protocol (LSP)** ベースのプラグインです。
 
