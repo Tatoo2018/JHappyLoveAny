@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="com.jhappy.jhappyloveany.feature" version="0.0.1.qualifier">
+      <category name="tool"/>
+   </feature>
+   <category-def name="tool" label="JHappy Tool"/>
+</site>
