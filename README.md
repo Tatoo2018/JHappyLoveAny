@@ -36,6 +36,11 @@ It eliminates the hassle of searching for key definitions manually, significantl
 
 ![screenshot6](https://github.com/user-attachments/assets/7970ee69-9442-4319-820d-53666e2f5f0e)
 
+![screenshotimage2](https://github.com/user-attachments/assets/228ae6d0-10b5-4493-8388-84fc77a12765)
+
+![screenshotimage6](https://github.com/user-attachments/assets/d5629ecd-0de8-4b3d-b317-eeecbcdbc399)
+
+
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
 | :--- | :--- | :--- |
