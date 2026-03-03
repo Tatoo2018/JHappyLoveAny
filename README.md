@@ -24,19 +24,19 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **📝 XPath Support:** Define target XML attributes using `XPath`, allowing flexibility for custom XML schemas. (e.g., `//@name`)
 - **🔀 Flexible Matching:** Toggle between Prefix (`starts with`) and Contains (`partial match`) modes for auto-completion.
 
-![screenshot1](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
+![Usage Screenshots1](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
 
-![screenshot2](https://github.com/user-attachments/assets/8e6f3883-22ae-48fa-926e-de30af7ccbed)
+![Usage Screenshots2](https://github.com/user-attachments/assets/8e6f3883-22ae-48fa-926e-de30af7ccbed)
 
-![screenshot3](https://github.com/user-attachments/assets/bf85f45f-743c-455e-8fc0-6c34fa747b6e)
+![Usage Screenshots3](https://github.com/user-attachments/assets/bf85f45f-743c-455e-8fc0-6c34fa747b6e)
 
-![screenshot4](https://github.com/user-attachments/assets/ec70db99-0472-4ae8-9d61-b5b79cd804d4)
+![Usage Screenshots4](https://github.com/user-attachments/assets/ec70db99-0472-4ae8-9d61-b5b79cd804d4)
 
-![screenshot5](https://github.com/user-attachments/assets/55e33219-a7c3-44b6-b67e-1a195e20b331)
+![Usage Screenshots5](https://github.com/user-attachments/assets/55e33219-a7c3-44b6-b67e-1a195e20b331)
 
-![screenshot6](https://github.com/user-attachments/assets/7970ee69-9442-4319-820d-53666e2f5f0e)
+![Usage Screenshots6](https://github.com/user-attachments/assets/7970ee69-9442-4319-820d-53666e2f5f0e)
 
-![screenshot7](https://github.com/user-attachments/assets/d5629ecd-0de8-4b3d-b317-eeecbcdbc399)
+![Usage Screenshots7](https://github.com/user-attachments/assets/d5629ecd-0de8-4b3d-b317-eeecbcdbc399)
 
 
 ### 🔗 Update Site URLs
