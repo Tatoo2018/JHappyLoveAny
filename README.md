@@ -16,13 +16,13 @@ It eliminates the hassle of searching for key definitions manually, significantl
 
 ### 🌟 Key Features
 
--- ** 🧠 Intelligent ** Completion: Press Ctrl + Space within string literals ("") to auto-complete predefined keys.
--- ** 📍 Jump to Definition: ** Ctrl + Click (or F3) on a key to navigate directly to its definition in .properties or XML files.
--- ** ℹ️ Hover Information: ** Hover over a key to view a popup with its value and definition details.
--- ** ⚡ Auto-Scan: ** Automatically indexes all resource files in the background, ensuring high-speed performance.
--- ** 🔧 Customizable Targets: ** Specify target files using Regular Expressions to flexibly support custom directory structures. (e.g., src/.*\.xml$)
--- ** 📝 XPath Support: ** Define target XML attributes using XPath, allowing flexibility for custom XML schemas. (e.g., //@name)
--- ** 🔀 Flexible Matching: ** Toggle between Prefix (starts with) and Contains (partial match) modes for auto-completion.
+- **🧠 Intelligent** Completion: `Press Ctrl + Space` within string literals ("") to auto-complete predefined keys.
+- **📍 Jump to Definition:** `Ctrl + Click` (or F3) on a key to navigate directly to its definition in .properties or XML files.
+- **ℹ️ Hover Information:** Hover over a key to view a popup with its value and definition details.
+- **⚡ Auto-Scan:** Automatically indexes all resource files in the background, ensuring high-speed performance.
+- **🔧 Customizable Targets:** Specify target files using `Regular Expressions` to flexibly support custom directory structures. (e.g., `src/.*\.xml$`)
+- **📝 XPath Support:** Define target XML attributes using `XPath`, allowing flexibility for custom XML schemas. (e.g., `//@name`)
+- **🔀 Flexible Matching:** Toggle between Prefix (`starts with`) and Contains (`partial match`) modes for auto-completion.
 
 ![screenshot5](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
 
