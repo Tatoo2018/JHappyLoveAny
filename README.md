@@ -1,13 +1,8 @@
 # 🚀 JHappyLoveAny
 
-[![Build](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml)
+[![Build](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/Tatoo2018/JHappyLoveAny/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Branch: develop](https://img.shields.io/badge/branch-develop-orange.svg)]()
-
-
-> [!WARNING]
-> **You are currently viewing the `develop` branch.**
-> This branch contains the latest experimental features, bug fixes, and active development work. It may not be fully stable. For the stable release, please switch to the [`main` branch](https://github.com/Tatoo2018/JHappy4AI/tree/main).
+![Version](https://img.shields.io/badge/version-0.0.1-blue)
 
 [🇺🇸 English](#-english) | [🇯🇵 日本語](#-日本語) | [🇨🇳 简体中文](#-简体中文)
 
