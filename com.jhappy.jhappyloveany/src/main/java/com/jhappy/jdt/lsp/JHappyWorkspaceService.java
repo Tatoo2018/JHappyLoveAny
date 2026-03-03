@@ -52,7 +52,7 @@ public class JHappyWorkspaceService implements WorkspaceService {
 			Path projectUri = server.findProjectUriFor(filePath);
 
 			//設定ファイルの更新の場合は、フルスキャンを実行
-			if (lowerUri.endsWith("/+" + QuerySetting.JHAPPYQUERIES_XML)) {
+			if (lowerUri.endsWith("/" + QuerySetting.JHAPPYQUERIES_XML)) {
 
 				//設定ファイルを再読み込み
 				server.loadQueriesConfig(projectUri.toAbsolutePath().toString());
@@ -86,21 +86,21 @@ public class JHappyWorkspaceService implements WorkspaceService {
 						List<QueryConfig> configs = querySetting.configs;
 
 						//
-						if (lowerUri.endsWith(".xml")) {
+					//	if (lowerUri.endsWith(".xml")) {
 							
-							List<DataEntry> entries = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
-							if (entries != null && !entries.isEmpty()) {
-								server.getFilePropertyCache().put(absolutePath, entries);
+							List<DataEntry> entriesXmle = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
+							if (entriesXmle != null && !entriesXmle.isEmpty()) {
+								server.getFilePropertyCache().put(absolutePath, entriesXmle);
 							}
 						
-						} else if (lowerUri.endsWith(".properties")) {
+					//	} else if (lowerUri.endsWith(".properties")) {
 					
-							List<DataEntry> entries = PropertiesScanner.loadPropertyFile(filePath, projectUri,
+							List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(filePath, projectUri,
 									configs);
-							if (entries != null && !entries.isEmpty()) {
-								server.getFilePropertyCache().put(absolutePath, entries);
+							if (entriesProperties != null && !entriesProperties.isEmpty()) {
+								server.getFilePropertyCache().put(absolutePath, entriesProperties);
 							}
-						}
+					//	}
 					}
 				}
 			}
