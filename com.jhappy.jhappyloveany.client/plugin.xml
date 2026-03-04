@@ -18,5 +18,24 @@
 	        id="com.jhappy.jhappyloveany">
 	</contentTypeMapping>
 	</extension>
+	
+	<extension point="org.eclipse.ui.propertyPages">
+   <page
+         name="JHappy XML Queryies File Settings"
+         class="com.jhappy.jhappyloveany.client.ui.JHappyPropertyPage"
+         id="com.jhappy.jhappyloveany.client.properties.JHappyPropertyPage">
+      <enabledWhen>
+         <adapt type="org.eclipse.core.resources.IProject"/>
+      </enabledWhen>
+   </page>
+</extension>
+
+<extension point="org.eclipse.help.toc">
+   <toc file="toc.xml" primary="true"/>
+</extension>
+
+<extension point="org.eclipse.help.contexts">
+   <contexts file="contexts.xml" plugin="com.jhappy.jhappyloveany" />
+</extension>
 
 </plugin>

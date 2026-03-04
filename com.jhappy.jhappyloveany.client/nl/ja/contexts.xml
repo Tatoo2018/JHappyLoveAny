@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+   <context id="help_context_id" title="JHappyLoveAny 設定ヘルプ">
+      <description>jhappyqueries.xml の記述方法について説明します。</description>
+      <topic href="html/config_guide.html" label="設定ガイド" />
+   </context>
+</contexts>

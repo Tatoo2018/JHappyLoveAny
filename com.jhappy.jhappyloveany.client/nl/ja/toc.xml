@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<toc label="JHappyLoveAny ユーザーガイド" topic="html/main.html">
+  <topic label="概要" href="html/intro.html" />
+   <topic label="設定ファイルについて" href="html/config_guide.html" />
+</toc>
