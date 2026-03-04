@@ -2,6 +2,7 @@ package com.jhappy.jdt.lsp;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +17,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionOptions;
+import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeWatchedFilesRegistrationOptions;
 import org.eclipse.lsp4j.DocumentFilter;
 import org.eclipse.lsp4j.FileSystemWatcher;
@@ -24,6 +27,9 @@ import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.Registration;
 import org.eclipse.lsp4j.RegistrationParams;
 import org.eclipse.lsp4j.SaveOptions;
@@ -52,7 +58,7 @@ import com.jhappy.jdt.util.EclipseUtil;
  */
 public class JHappyLanguageServer implements LanguageServer, LanguageClientAware {
 
-	private LanguageClient client;
+	public LanguageClient client;
 
 	private final JHappyTextDocumentService textDocumentService = new JHappyTextDocumentService(this);
 
@@ -85,7 +91,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 	 */
 	@Override
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-		
+
 		log("initialize start");
 
 		//
@@ -133,7 +139,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 	 */
 	@Override
 	public void initialized(InitializedParams params) {
-		
+
 		log("initialized start");
 
 		projectQueryConfigs.clear();
@@ -141,10 +147,29 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 		// Scan all projects (
 		if (workspaceFolderList != null && !workspaceFolderList.isEmpty()) {
 			CompletableFuture.runAsync(() -> {
-				for (WorkspaceFolder folder : workspaceFolderList) {
-					projectQueryConfigs.putAll(QuerySetting.loadQueriesConfig(folder.getUri()));
+				WorkspaceFolder currentfolder = null;
+				try {
+
+					for (WorkspaceFolder folder : workspaceFolderList) {
+						currentfolder = folder;
+						projectQueryConfigs.putAll(QuerySetting.loadQueriesConfig(folder.getUri()));
+						validateConfig(folder.getUri().toString(), null);
+					}
+
+				} catch (Exception e) {
+					logError("failed to load jhappyqueries.xml", e);
+					try {
+						if (currentfolder != null) {
+							validateConfig(currentfolder.getUri(), e);
+						}
+
+					} catch (URISyntaxException e1) {
+						logError("failed to load jhappyqueries.xml", e);
+					}
+
 				}
 				scanAllFiles();
+
 			});
 		}
 
@@ -201,6 +226,43 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 	}
 
+	public void validateConfig(String targetUri, Exception e) throws URISyntaxException {
+
+		Path rootPath;
+		if (targetUri.startsWith("file:")) {
+			rootPath = Paths.get(new URI(targetUri));
+		} else {
+			// 普通のパスとして解釈
+			rootPath = Paths.get(targetUri);
+		}
+
+		Path configPath = rootPath.resolve(QuerySetting.JHAPPYQUERIES_XML); // 指定のXML
+		List<Diagnostic> diagnostics = new ArrayList<>();
+
+		int line = 0; // デフォルトは1行目
+
+		if (e != null) {
+			if (e instanceof org.xml.sax.SAXParseException) {
+				org.xml.sax.SAXParseException se = (org.xml.sax.SAXParseException) e;
+				line = Math.max(0, se.getLineNumber() - 1);
+			}
+
+			// エラー位置を特定（簡易的に0行目とする例）
+			Range range = new Range(new Position(line, 0), new Position(line, 50));
+
+			Diagnostic diagnostic = new Diagnostic();
+			diagnostic.setRange(range);
+			diagnostic.setSeverity(DiagnosticSeverity.Error);
+			diagnostic.setSource("JHappy Validator");
+			diagnostic.setMessage("Invalid File: " + e.getLocalizedMessage());
+
+			diagnostics.add(diagnostic);
+
+		}
+		// クライアント（Eclipse）へ通知
+		client.publishDiagnostics(new PublishDiagnosticsParams(configPath.toUri().toString(), diagnostics));
+	}
+
 	/**
 	 * プロジェクト内の全プロパティファイルを走査しキャッシュ
 	 */
@@ -247,14 +309,14 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 				if (Files.exists(rootPath)) {
 					scan(rootPath, excludes, projectQueryConfigs.get(rootPath.toAbsolutePath().toString()));
-				
+
 				}
 
 			}
 		} catch (Exception e) {
-	
-			logError("error scanAllFiles " , e);
-			
+
+			logError("error scanAllFiles ", e);
+
 		}
 	}
 
@@ -283,25 +345,25 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 										return false;
 									}
 								}
-							//	String name = path.toString().toLowerCase();
-							//	return name.endsWith(".properties") || name.endsWith(".xml");
+								//	String name = path.toString().toLowerCase();
+								//	return name.endsWith(".properties") || name.endsWith(".xml");
 								return true;
 							})
 							.forEach(path -> {
 
 								String absolutePath = path.toAbsolutePath().toString();
-								
+
 								//if (path.toString().toLowerCase().endsWith(".xml")) {
-									List<DataEntry> entriesXml = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
-									if (entriesXml != null && !entriesXml.isEmpty()) {
-										filePropertyCache.put(absolutePath, entriesXml);
-									}
-							//	} else {
-									List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(path, rootPath,
-											configs);
-									if (entriesProperties != null && !entriesProperties.isEmpty()) {
-										filePropertyCache.put(absolutePath, entriesProperties);
-									}
+								List<DataEntry> entriesXml = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
+								if (entriesXml != null && !entriesXml.isEmpty()) {
+									filePropertyCache.put(absolutePath, entriesXml);
+								}
+								//	} else {
+								List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(path, rootPath,
+										configs);
+								if (entriesProperties != null && !entriesProperties.isEmpty()) {
+									filePropertyCache.put(absolutePath, entriesProperties);
+								}
 								//}
 							});
 				}
@@ -322,7 +384,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 		for (WorkspaceFolder folder : workspaceFolderList) {
 			try {
-				
+
 				Path projectPath = Paths.get(new URI(folder.getUri())).toAbsolutePath();
 				String projectPathStr = projectPath.toString();
 
@@ -330,7 +392,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 					return projectPath;
 				}
 			} catch (Exception e) {
-			
+
 				continue;
 			}
 		}
@@ -347,14 +409,17 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 	/**
 	 * @param targetUri
+	 * @throws Exception 
 	 */
-	public void loadQueriesConfig(String targetUri) {
+	public void loadQueriesConfig(String targetUri) throws Exception {
+
 		projectQueryConfigs.putAll(QuerySetting.loadQueriesConfig(targetUri));
 
 	}
 
 	public void logError(String message, Throwable t) {
-		if (t != null) t.printStackTrace(System.err);
+		if (t != null)
+			t.printStackTrace(System.err);
 		if (client != null) {
 			client.logMessage(new MessageParams(MessageType.Error, message + (t != null ? ": " + t.getMessage() : "")));
 		}

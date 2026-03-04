@@ -16,6 +16,9 @@ public class Messages extends NLS {
     public static String PropertyPage_Msg_SuccessBody;
     public static String PropertyPage_Msg_ErrorTitle;
     public static String PropertyPage_Msg_ErrorBody;
+    public static String Reload_Config;
+    
+    
 
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

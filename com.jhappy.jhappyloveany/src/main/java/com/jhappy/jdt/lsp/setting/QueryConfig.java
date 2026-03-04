@@ -1,6 +1,6 @@
 package com.jhappy.jdt.lsp.setting;
 
-import java.util.stream.Collectors;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * 
@@ -15,16 +15,34 @@ public class QueryConfig {
 	 * @param trim
 	 * @param type
 	 * @param searchRootPath
+	 * @throws XPathExpressionException 
 	 */
-	public QueryConfig(String regex, String xpathContent, boolean trim, String type, String searchRootPath) {
+	public QueryConfig(String regex, String xpath, boolean isTrim, String type, String searchRootPath)
+			throws XPathExpressionException {
+
+		validXPath(xpath);
+
 		this.data.pathPattern = java.util.regex.Pattern.compile(regex);
-		// CDATA内の改行を考慮してリスト化
-		this.data.xpaths = java.util.Arrays.stream(xpathContent.split("\n"))
-				.map(String::trim)
-				.filter(s -> !s.isEmpty())
-				.collect(Collectors.toList());
-		this.data.trim = trim;
+		this.data.xpath = xpath;
+		this.data.isTrim = isTrim;
 		this.data.type = type;
 		this.data.searchRootPath = searchRootPath;
+
+	}
+
+	private boolean validXPath(String xpathExpression) throws XPathExpressionException {
+
+		if (xpathExpression == null || xpathExpression.trim().isEmpty()) {
+			return false;
+		}
+		try {
+			javax.xml.xpath.XPathFactory factory = javax.xml.xpath.XPathFactory.newInstance();
+			javax.xml.xpath.XPath xpath = factory.newXPath();
+			// コンパイルを試みることで構文チェックを行う
+			xpath.compile(xpathExpression);
+			return true;
+		} catch (javax.xml.xpath.XPathExpressionException e) {
+			throw e;
+		}
 	}
 }

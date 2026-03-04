@@ -28,8 +28,9 @@ public class QuerySetting {
 	/**
 	 * @param targetUri
 	 * @return
+	 * @throws Exception 
 	 */
-	public static Map<String, QuerySetting> loadQueriesConfig(String targetUri) {
+	public static Map<String, QuerySetting> loadQueriesConfig(String targetUri) throws Exception {
 		
 		Map<String, QuerySetting> projectQueryConfigs = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -79,10 +80,12 @@ public class QuerySetting {
 
 				for (int i = 0; i < nodes.getLength(); i++) {
 					Element el = (Element) nodes.item(i);
+					
+					
 					querySetting.configs.add(new QueryConfig(
 							el.getAttribute("filepath"),
-							el.getTextContent(),
-							"yes".equals(el.getAttribute("trim")),
+							 el.getTextContent().trim(),
+							 ! "no".equals(el.getAttribute("trim")),
 							el.getAttribute("type"),
 							el.getAttribute("searchrootpath")));
 				}
@@ -93,7 +96,7 @@ public class QuerySetting {
 			
 		} catch (Exception e) {
 			System.err.println("LSP: Failed to load queries.xml: " + targetUri);
-			e.printStackTrace();
+			throw e;
 		
 		}
 
