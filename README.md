@@ -36,9 +36,6 @@ It eliminates the hassle of searching for key definitions manually, significantl
 
 ![Usage Screenshots6](https://github.com/user-attachments/assets/7970ee69-9442-4319-820d-53666e2f5f0e)
 
-![Usage Screenshots7](https://github.com/user-attachments/assets/d5629ecd-0de8-4b3d-b317-eeecbcdbc399)
-
-
 ## ⚙️ Configuration
 You can create the configuration file via the project properties.:
 `Window` > `Preferences` > `JHappy XML Queries File`
