@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>JHappyLoveAny 設定ガイド</title>
     <style>
-        body { font-family: "Meiryo", "MS PGothic", sans-serif; line-height: 1.6; padding: 20px; color: #333; }
+        body { font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif; line-height: 1.6; padding: 20px; color: #333; }
         h1 { color: #007acc; border-bottom: 2px solid #007acc; }
         h2 { color: #333; margin-top: 25px; border-left: 5px solid #007acc; padding-left: 10px; }
         code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
-        pre { background-color: #f4f4f4; padding: 15px; border-left: 5px solid #ccc; overflow: auto; line-height: 1.2; }
-        .note { background-color: #fff4e5; border-left: 5px solid #ffa117; padding: 10px; margin: 20px 0; }
+        pre { background-color: #f4f4f4; padding: 15px; border-left: 5px solid #ccc; overflow: auto; }
+        .note { background-color: #e7f3fe; border-left: 5px solid #2196F3; padding: 10px; margin: 20px 0; }
         table { border-collapse: collapse; width: 100%; margin: 15px 0; }
         table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #f8f8f8; }
-        .example-title { font-weight: bold; color: #2e7d32; margin-top: 15px; }
+        strong { color: #d9534f; }
     </style>
 </head>
 <body>
 
     <h1>JHappyLoveAny 設定ガイド</h1>
-    <p>このガイドでは、プロジェクト内でインテリジェントなコード補完を有効にするための <code>jhappyqueries.xml</code> の設定方法を説明します。</p>
+    <p>このガイドでは、プロジェクトでインテリジェントなコード補完を有効にするための <code>jhappyqueries.xml</code> の設定方法について説明します。</p>
 
     <div class="note">
-        <strong>ファイルの配置場所:</strong> <code>jhappyqueries.xml</code> は、Eclipseプロジェクトの<strong>ルートディレクトリ（直下）</strong>に配置してください。
+        <strong>ファイルの配置場所:</strong> <code>jhappyqueries.xml</code> は、Eclipse プロジェクトの<strong>ルートディレクトリ</strong>に配置してください。
     </div>
 
-    <h2>1. XMLの基本構造</h2>
-    <p>設定ファイルは、バリデーションのためのDTD定義を含むシンプルなXML形式を使用します。</p>
+    <h2>1. XML 構造</h2>
+    <p>設定ファイルは、バリデーション用の DTD 定義を含むシンプルな XML 形式を使用します。</p>
     <pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE queries [
@@ -39,7 +39,7 @@
     &lt;!-- ここにクエリを記述します --&gt;
 &lt;/queries&gt;</pre>
 
-    <h2>2. query属性の解説</h2>
+    <h2>2. クエリ属性の詳細</h2>
     <table>
         <tr>
             <th>属性名</th>
@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td><code>filepath</code></td>
-            <td>対象ファイルを特定するための正規表現（例: <code>.*\.xml$</code>）。</td>
+            <td>対象ファイルを指定するための正規表現（例: <code>.*\.xml$</code>）。</td>
         </tr>
         <tr>
             <td><code>type</code></td>
@@ -55,4 +55,25 @@
         </tr>
         <tr>
             <td><code>trim</code></td>
-            <td>抽出したキーから余白を削除するかどうか（デフォルト:
+            <td>抽出されたキーから前後の空白を削除するかどうか（デフォルト: <code>yes</code>）。</td>
+        </tr>
+        <tr>
+            <td><code>description</code></td>
+            <td>プロジェクト・プロパティ画面のテーブルに表示される短い説明文。</td>
+        </tr>
+    </table>
+
+    <h2>3. 設定例</h2>
+    <h3>XML キーの補完（XPath を使用）</h3>
+    <p>XML の属性（例: <code>&lt;item id="my_key"&gt;</code>）からキーを抽出するには、CDATA セクション内に XPath 式を記述します。</p>
+    <pre>&lt;query filepath=".*\.xml$" type="xml"&gt;&lt;![CDATA[//@id]]&gt;&lt;/query&gt;</pre>
+
+    <h3>Properties ファイルの補完</h3>
+    <p>標準的な <code>.properties</code> ファイルの場合、XPath は不要です。ファイルパターンの指定のみで動作します。</p>
+    <pre>&lt;query filepath="src/.*\.properties$" type="properties" /&gt;</pre>
+	
+	<h2>4.プロジェクト設定画面</h2>
+	<p><img src="images/screenshot7.jpg" width="400px"/></p>
+
+</body>
+</html>
