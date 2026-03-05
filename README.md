@@ -39,6 +39,19 @@ It eliminates the hassle of searching for key definitions manually, significantl
 ![Usage Screenshots7](https://github.com/user-attachments/assets/d5629ecd-0de8-4b3d-b317-eeecbcdbc399)
 
 
+## ⚙️ Configuration
+You can create the configuration file via the project properties.:
+`Window` > `Preferences` > `JHappy XML Queries File`
+
+![screenshot7](https://github.com/user-attachments/assets/d3d95525-c712-4e82-9941-4ac56521761d)
+
+## 📚 Help Documentation
+You can find the user manual within Eclipse:
+`Help` > `Help Contents` > `JHappyLoveAny Plugin User Guide`
+
+![screenshotimage8](https://github.com/user-attachments/assets/6cd9e9d3-bc4b-4a71-b552-9f671c36e7b5)
+
+
 ### 🔗 Update Site URLs
 | Environment | Branch | Eclipse Update Site URL |
 | :--- | :--- | :--- |
