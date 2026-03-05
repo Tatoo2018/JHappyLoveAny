@@ -79,6 +79,8 @@ public class JHappyXmlScanner {
 			doc = JHappyXmlSourceParser.parse(path.toFile());
 		} catch (Exception e) {
 			e.printStackTrace();
+			entries.add(new DataEntry("road xml failed", "road xml failed", path, 0, "xml"));
+			
 			return entries;
 		}
 		XPath xpathProcessor = XPATH_FACTORY.newXPath();

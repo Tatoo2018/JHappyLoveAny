@@ -17,7 +17,14 @@ public class Messages extends NLS {
     public static String PropertyPage_Msg_ErrorTitle;
     public static String PropertyPage_Msg_ErrorBody;
     public static String Reload_Config;
-    
+    public static String Validate_Error_TypeRequired;
+    public static String Validate_Error_TypeKind;
+    public static String Validate_Error_FilepathRequired;
+    public static String Validate_Error_InvalidRegex;
+    public static String Validate_Error_XpathRequired;
+    public static String Validate_Error_InvalidXpath;
+    public static String Validate_Msg_ValidConfig;
+    public static String PropertyPage_Button_CreateDefaultConfig;
     
 
     static {

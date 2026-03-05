@@ -11,6 +11,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.osgi.util.NLS;
@@ -18,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,13 +48,13 @@ public class JHappyPropertyPage extends PropertyPage {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		
+
 		noDefaultAndApplyButton();
-		
+
 		mainComposite = new Composite(parent, SWT.NONE);
 		stackLayout = new StackLayout();
 		mainComposite.setLayout(stackLayout);
-		
+
 		noDefaultAndApplyButton();
 
 		createTableArea(mainComposite);
@@ -63,43 +66,139 @@ public class JHappyPropertyPage extends PropertyPage {
 	}
 
 	/**
-     * テーブル画面：上部にヘルプと再読み込みボタン、中央にテーブルを配置
-     */
-    private void createTableArea(Composite parent) {
-        tableComposite = new Composite(parent, SWT.NONE);
-        tableComposite.setLayout(new GridLayout(1, false));
+	 * テーブル画面の生成
+	 */
+	private void createTableArea(Composite parent) {
+		tableComposite = new Composite(parent, SWT.NONE);
+		tableComposite.setLayout(new GridLayout(1, false));
 
-        // 操作用バー
-        Composite actionBar = new Composite(tableComposite, SWT.NONE);
-        actionBar.setLayout(new GridLayout(2, false));
-        actionBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		// 操作用バー
+		Composite actionBar = new Composite(tableComposite, SWT.NONE);
+		actionBar.setLayout(new GridLayout(2, false));
+		actionBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        createHelpLink(actionBar);
+		createHelpLink(actionBar);
 
-        Button reloadBtn = new Button(actionBar, SWT.PUSH);
-        reloadBtn.setText(Messages.Reload_Config);
-        reloadBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-        reloadBtn.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                updateUIVisibility();
-            }
-        });
+		Button reloadBtn = new Button(actionBar, SWT.PUSH);
+		reloadBtn.setText(Messages.Reload_Config);
+		Image reloadIcon = PlatformUI.getWorkbench().getSharedImages()
+				.getImage(org.eclipse.ui.ISharedImages.IMG_ELCL_SYNCED);
+		reloadBtn.setImage(reloadIcon);
+		reloadBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		reloadBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateUIVisibility();
+			}
+		});
 
-        viewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
-        Table table = viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		ColumnViewerToolTipSupport.enableFor(viewer);
 
-        createColumn(viewer, Messages.PropertyPage_Column_Type, 80);
-        createColumn(viewer, Messages.PropertyPage_Column_FilePattern, 180);
-        createColumn(viewer, Messages.PropertyPage_Column_XPath, 200);
-        createColumn(viewer, Messages.PropertyPage_Column_Description, 200);
+		Table table = viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        viewer.setContentProvider(ArrayContentProvider.getInstance());
-        viewer.setLabelProvider(new QueryLabelProvider());
-    }
+		// ★ 共通化したcreateColumnを使用（第5引数にバリデーションキーを指定）
+		createColumn(viewer, Messages.PropertyPage_Column_Type, 80,
+				m -> m.getType(), "type");
+
+		createColumn(viewer, Messages.PropertyPage_Column_FilePattern, 180,
+				m -> m.getFilepath(), "path");
+
+		createColumn(viewer, Messages.PropertyPage_Column_XPath, 200,
+				m -> "properties".equals(m.getType()) ? "-" : m.getXpath(), "xpath");
+
+		createColumn(viewer, Messages.PropertyPage_Column_Description, 200,
+				m -> m.getDescription(), null); // 説明欄はバリデーションなし
+
+		viewer.setContentProvider(ArrayContentProvider.getInstance());
+	}
+
+	/**
+	 * カラム生成の共通メソッド
+	 * propertyKeyを指定すると、QueryModel内のバリデーション結果と自動連動します
+	 */
+	private void createColumn(TableViewer viewer, String title, int width,
+			java.util.function.Function<QueryModel, String> textProvider,
+			String propertyKey) {
+
+		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
+		col.getColumn().setText(title);
+		col.getColumn().setWidth(width);
+
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return textProvider.apply((QueryModel) element);
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (propertyKey == null)
+					return null;
+				QueryModel m = (QueryModel) element;
+				ValidationResult result = m.getValidation(propertyKey);
+				if (!result.isValid) {
+					return PlatformUI.getWorkbench().getSharedImages()
+							.getImage(org.eclipse.ui.ISharedImages.IMG_OBJS_ERROR_TSK);
+				}
+				return null;
+			}
+
+			@Override
+			public String getToolTipText(Object element) {
+				if (propertyKey == null)
+					return null;
+				QueryModel m = (QueryModel) element;
+				return m.getValidation(propertyKey).message;
+			}
+		});
+	}
+
+	private void loadConfigData() {
+		List<QueryModel> models = new ArrayList<>();
+		IProject project = (IProject) getElement().getAdapter(IProject.class);
+		IFile configFile = project.getFile("jhappyqueries.xml");
+
+		if (!configFile.exists())
+			return;
+
+		try (InputStream is = configFile.getContents()) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(is);
+
+			NodeList nodeList = doc.getElementsByTagName("query");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Element el = (Element) nodeList.item(i);
+
+				QueryModel m = new QueryModel(
+						el.getAttribute("filepath"),
+						el.getAttribute("type"),
+						el.getAttribute("trim"),
+						el.getTextContent().trim(),
+						el.getAttribute("description"));
+
+				// ★ バリデーションの実行（ロジックを外出ししたValidatorを適用）
+				m.runValidation("type",
+						QueryValidators.compose(QueryValidators.TYPE_REQUIRED, QueryValidators.TYPE_KIND));
+				m.runValidation("path", QueryValidators.compose(
+						QueryValidators.FILEPATH_REQUIRED, QueryValidators.FILEPATH_REGEX));
+				m.runValidation("xpath", QueryValidators.XPATH_SPECIFIC);
+
+				models.add(m);
+			}
+			viewer.setInput(models);
+
+			boolean hasAnyError = models.stream().anyMatch(QueryModel::hasError);
+			setErrorMessage(hasAnyError ? "設定ファイルに不正な記述があります。アイコンを確認してください。" : null);
+
+		} catch (Exception e) {
+			setErrorMessage("XMLパースエラー: " + e.getMessage());
+		}
+	}
 
 	/**
 	 * ファイルなし画面：中央寄せでメッセージ、リンク、ボタンを配置
@@ -118,15 +217,13 @@ public class JHappyPropertyPage extends PropertyPage {
 
 		Label iconLabel = new Label(labelComposite, SWT.NONE);
 		iconLabel.setImage(parent.getDisplay().getSystemImage(SWT.ICON_WARNING));
-		// 1. SWT.WRAP を指定して改行を許可する
+
 		Label label = new Label(labelComposite, SWT.WRAP);
 		label.setText(Messages.PropertyPage_Label_FileNotFound);
 		label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
-		// 2. GridDataの設定
 		GridData labelData = new GridData(SWT.FILL, SWT.TOP, true, false);
-		// widthHint を設定すると、その幅を超えた時に改行されます
-		// 400ピクセル程度を基準にするのが一般的です
+
 		labelData.widthHint = 400;
 		label.setLayoutData(labelData);
 
@@ -135,8 +232,11 @@ public class JHappyPropertyPage extends PropertyPage {
 		createHelpLink(emptyComposite);
 
 		Button createBtn = new Button(emptyComposite, SWT.PUSH);
-		createBtn.setText("デフォルトの設定ファイルを作成する");
+		createBtn.setText(Messages.PropertyPage_Button_CreateDefaultConfig);
 		createBtn.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+		Image newFileIcon = PlatformUI.getWorkbench().getSharedImages()
+				.getImage(org.eclipse.ui.ISharedImages.IMG_OBJ_ADD);
+		createBtn.setImage(newFileIcon);
 		createBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -147,7 +247,7 @@ public class JHappyPropertyPage extends PropertyPage {
 	}
 
 	/**
-	 * リンクが表示されない問題を解決するために、メソッド化して確実にレイアウトを適用
+	 *
 	 */
 	private void createHelpLink(Composite parent) {
 		Link link = new Link(parent, SWT.NONE);
@@ -172,40 +272,37 @@ public class JHappyPropertyPage extends PropertyPage {
 			stackLayout.topControl = emptyComposite;
 		}
 
-		// 子階層まで再配置を強制
 		mainComposite.layout(true, true);
 	}
 
 	/**
-     * プロジェクト内の雛形ファイルからデフォルトのXMLファイルを生成
-     */
-    private void createDefaultConfigFile() {
-        IProject project = (IProject) getElement().getAdapter(IProject.class);
-        IFile configFile = project.getFile("jhappyqueries.xml");
-        
-   
+	 * プロジェクト内の雛形ファイルからデフォルトのXMLファイルを生成
+	 */
+	private void createDefaultConfigFile() {
+		IProject project = (IProject) getElement().getAdapter(IProject.class);
+		IFile configFile = project.getFile("jhappyqueries.xml");
 
-        try (InputStream   templateStream = getTemplateFromBundle()){
-           
-            // 新しいファイルを作成（templateStream は内部で close される）
-            configFile.create(templateStream, true, null);
+		try (InputStream templateStream = getTemplateFromBundle()) {
 
-            MessageDialog.openInformation(getShell(), 
-                Messages.PropertyPage_Msg_SuccessTitle, 
-                Messages.PropertyPage_Msg_SuccessBody);
-            
-         // 作成したファイルを Eclipse エディタで開く
-            IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            IDE.openEditor(page, configFile);
+			// 新しいファイルを作成（templateStream は内部で close される）
+			configFile.create(templateStream, true, null);
 
-        } catch (Exception e) {
-            MessageDialog.openError(getShell(), 
-                Messages.PropertyPage_Msg_ErrorTitle, 
-                NLS.bind(Messages.PropertyPage_Msg_ErrorBody, e.getMessage()));
-        }
-    }
+			MessageDialog.openInformation(getShell(),
+					Messages.PropertyPage_Msg_SuccessTitle,
+					Messages.PropertyPage_Msg_SuccessBody);
 
-	// プラグイン内の "/templates/default_config.xml" を読み込む場合
+			// 作成したファイルを Eclipse エディタで開く
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IDE.openEditor(page, configFile);
+
+		} catch (Exception e) {
+			MessageDialog.openError(getShell(),
+					Messages.PropertyPage_Msg_ErrorTitle,
+					NLS.bind(Messages.PropertyPage_Msg_ErrorBody, e.getMessage()));
+		}
+	}
+
+	//
 	private InputStream getTemplateFromBundle() throws Exception {
 		org.osgi.framework.Bundle bundle = org.eclipse.core.runtime.Platform
 				.getBundle("com.jhappy.jhappyloveany.client");
@@ -213,44 +310,4 @@ public class JHappyPropertyPage extends PropertyPage {
 		return url.openStream();
 	}
 
-	private void createColumn(TableViewer viewer, String title, int width) {
-		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
-		col.getColumn().setText(title);
-		col.getColumn().setWidth(width);
-	}
-
-	private void loadConfigData() {
-		List<QueryModel> models = new ArrayList<>();
-		IProject project = (IProject) getElement().getAdapter(IProject.class);
-		IFile configFile = project.getFile("jhappyqueries.xml");
-
-		if (!configFile.exists())
-			return;
-
-		try (InputStream is = configFile.getContents()) {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(is);
-
-			NodeList nodeList = doc.getElementsByTagName("query");
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Element el = (Element) nodeList.item(i);
-
-				String xpath = el.getTextContent();
-				if (xpath != null) {
-					xpath = xpath.trim();
-				}
-
-				models.add(new QueryModel(
-						el.getAttribute("filepath"),
-						el.getAttribute("type"),
-						el.getAttribute("trim"),
-						xpath,
-						el.getAttribute("description")));
-			}
-			viewer.setInput(models);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
