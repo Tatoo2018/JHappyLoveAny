@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JHappyLoveAny Configuration Guide</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; color: #333; }
+        h1 { color: #007acc; border-bottom: 2px solid #007acc; }
+        h2 { color: #333; margin-top: 25px; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        pre { background-color: #f4f4f4; padding: 15px; border-left: 5px solid #ccc; overflow: auto; }
+        .note { background-color: #e7f3fe; border-left: 5px solid #2196F3; padding: 10px; margin: 20px 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f8f8f8; }
+    </style>
+</head>
+<body>
+
+    <h1>JHappyLoveAny Configuration Guide</h1>
+    <p>This guide explains how to configure <code>jhappyqueries.xml</code> to enable intelligent code completion for your project.</p>
+
+    <div class="note">
+        <strong>File Location:</strong> Place <code>jhappyqueries.xml</code> in the <strong>root directory</strong> of your Eclipse project.
+    </div>
+
+    <h2>1. XML Structure</h2>
+    <p>The configuration file uses a simple XML format with a DTD definition for validation.</p>
+    <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE queries [
+   &lt;!ELEMENT queries (#PCDATA|query)*&gt;
+   &lt;!ATTLIST queries completionMatch (prefix | contains) "contains"&gt;
+   &lt;!ELEMENT query (#PCDATA)&gt;
+   &lt;!ATTLIST query filepath CDATA #IMPLIED trim (yes | no) "yes" type (xml | properties) "xml" description CDATA #IMPLIED&gt;
+]&gt;
+&lt;queries completionMatch="contains"&gt;
+    &lt;!-- Your queries here --&gt;
+&lt;/queries&gt;</pre>
+
+    <h2>2. Query Attributes</h2>
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>filepath</code></td>
+            <td>Regular expression to match target files (e.g., <code>.*\.xml$</code>).</td>
+        </tr>
+        <tr>
+            <td><code>type</code></td>
+            <td>File type: <code>xml</code> or <code>properties</code>.</td>
+        </tr>
+        <tr>
+            <td><code>trim</code></td>
+            <td>Whether to trim whitespace from the extracted keys (default: <code>yes</code>).</td>
+        </tr>
+        <tr>
+            <td><code>description</code></td>
+            <td>Short text shown in the Project Properties table.</td>
+        </tr>
+    </table>
+
+    <h2>3. Examples</h2>
+    <h3>XML Key Completion (using XPath)</h3>
+    <p>To extract keys from an XML attribute (e.g., <code>&lt;item id="my_key"&gt;</code>), use CDATA with an XPath expression:</p>
+    <pre>&lt;query filepath=".*\.xml$" type="xml"&gt;&lt;![CDATA[//@id]]&gt;&lt;/query&gt;</pre>
+
+    <h3>Properties File Completion</h3>
+    <p>For standard <code>.properties</code> files, you don't need an XPath. Just specify the file pattern:</p>
+    <pre>&lt;query filepath="src/.*\.properties$" type="properties" /&gt;</pre>
+	
+	<h2>4. Project Setting Page</h2>
+	<p><img src="images/screenshot7.jpg" width="400px"/></p>
+
+</body>
+</html>

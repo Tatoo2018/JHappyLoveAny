@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Attr;
@@ -22,34 +23,28 @@ import com.jhappy.jdt.lsp.setting.QueryConfig;
 public class JHappyXmlScanner {
 
 	private static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
-	
+
 	/**
 	 * @param path
 	 * @param projectPath
 	 * @param configs
 	 * @return
+	 * @throws XPathExpressionException 
 	 */
 	public static List<DataEntry> loadXmlFile(Path path, Path projectPath, List<QueryConfig> configs) {
 
-		try {
+		Path relativePath = projectPath.relativize(path);
 
-			Path relativePath = projectPath.relativize(path);
+		List<QueryConfig> matchedConfigs = filterXPathList(configs, relativePath);
 
-			List<String> matchedXpathList = filterXPathList(configs, relativePath);
-
-			// scan xml file
-			if(0 < matchedXpathList.size()) {
-				List<DataEntry> newEntries = JHappyXmlScanner.scan(path, matchedXpathList);
-				return newEntries;
-			}
-			
-
-			return null;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		// scan xml file
+		if (0 < matchedConfigs.size()) {
+			List<DataEntry> newEntries = JHappyXmlScanner.scan(path, matchedConfigs);
+			return newEntries;
 		}
+
+		return new ArrayList<>();
+
 	}
 
 	/**
@@ -57,43 +52,60 @@ public class JHappyXmlScanner {
 	 * @param filepath
 	 * @return
 	 */
-	private static List<String> filterXPathList(List<QueryConfig> configs, Path filepath) {
-		
-		List<String> matchedXpathList = new ArrayList<>();
+	private static List<QueryConfig> filterXPathList(List<QueryConfig> configs, Path filepath) {
+
+		List<QueryConfig> matchedConfigs = new ArrayList<>();
 		for (QueryConfig config : configs) {
 			if ("xml".equals(config.data.type) && config.data.pathPattern.matcher(filepath.toString()).find()) {
-				matchedXpathList.addAll(config.data.xpaths);
+				matchedConfigs.add(config);
 			}
 		}
-		return matchedXpathList;
+		return matchedConfigs;
 	}
 
 	/**
 	 * @param path
 	 * @param xpaths
 	 * @return
+	 * @throws XPathExpressionException 
 	 * @throws Exception
 	 */
-	public static List<DataEntry> scan(Path path, List<String> xpaths) throws Exception {
-		
-		
+	public static List<DataEntry> scan(Path path, List<QueryConfig> configs){
 
 		List<DataEntry> entries = new ArrayList<>();
 
-		Document doc = JHappyXmlSourceParser.parse(path.toFile());
+		Document doc;
+		try {
+			doc = JHappyXmlSourceParser.parse(path.toFile());
+		} catch (Exception e) {
+			e.printStackTrace();
+			entries.add(new DataEntry("road xml failed", "road xml failed", path, 0, "xml"));
+			
+			return entries;
+		}
 		XPath xpathProcessor = XPATH_FACTORY.newXPath();
 
-		for (String expression : xpaths) {
-			String trimmedExpr = expression.trim();
-			System.err.println("DEBUG: Testing XPath -> [" + trimmedExpr + "]");
+		for (QueryConfig config : configs) {
+
+			String expression = config.data.xpath;
 
 			NodeList nodes = null;
-			nodes = (NodeList) xpathProcessor.evaluate(expression, doc, XPathConstants.NODESET);
+			
+			try {
+				nodes = (NodeList) xpathProcessor.evaluate(expression, doc, XPathConstants.NODESET);
+			} catch (XPathExpressionException e) {
+				e.printStackTrace();
+				return new ArrayList<>();
+			}
+		
 
-			System.err.println("DEBUG: Found nodes count: " + nodes.getLength());
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Node node = nodes.item(i);
-				String value = node.getTextContent().trim();
+				
+				String value = node.getTextContent();
+				if (config.data.isTrim) {
+					value = value == null ? null : value.trim();
+				}
 
 				// 行番号の取得 (属性の場合は親要素から取得)
 				Node lineNode = (node.getNodeType() == Node.ATTRIBUTE_NODE)

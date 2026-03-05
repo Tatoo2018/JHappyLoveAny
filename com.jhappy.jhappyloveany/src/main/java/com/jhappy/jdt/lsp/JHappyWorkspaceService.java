@@ -29,7 +29,7 @@ public class JHappyWorkspaceService implements WorkspaceService {
 	/**
 	 * 
 	 */
-	private final JHappyLanguageServer server;
+	public final JHappyLanguageServer server;
 
 	public JHappyWorkspaceService(JHappyLanguageServer server) {
 		this.server = server;
@@ -54,15 +54,29 @@ public class JHappyWorkspaceService implements WorkspaceService {
 			//設定ファイルの更新の場合は、フルスキャンを実行
 			if (lowerUri.endsWith("/" + QuerySetting.JHAPPYQUERIES_XML)) {
 
-				//設定ファイルを再読み込み
-				server.loadQueriesConfig(projectUri.toAbsolutePath().toString());
+				try {
+					//設定ファイルを再読み込み
+					server.loadQueriesConfig(projectUri.toAbsolutePath().toString());
+					server.validateConfig(projectUri.toString(), null);
+
+				} catch (Exception e) {
+					server.logError("failed to load jhappyqueries.xml", e);
+					try {
+
+						server.validateConfig(projectUri.toString(), e);
+
+					} catch (URISyntaxException e1) {
+						server.logError("failed to load jhappyqueries.xml", e);
+					}
+					continue;
+				}
 
 				if (projectUri != null) {
 					CompletableFuture.runAsync(() -> {
 						server.scanAllFiles();
 					});
 				}
-				
+
 			} else {
 				if (isExcluded(filePath)) {
 					continue;
@@ -73,34 +87,34 @@ public class JHappyWorkspaceService implements WorkspaceService {
 				if (event.getType() == FileChangeType.Deleted) {
 
 					server.getFilePropertyCache().remove(absolutePath);
-					
+
 				} else {
-					
+
 					server.getFilePropertyCache().remove(absolutePath);
 
 					QuerySetting querySetting = server.getProjectQueryConfigs()
 							.get(projectUri.toAbsolutePath().toString());
-					
+
 					if (querySetting != null) {
-						
+
 						List<QueryConfig> configs = querySetting.configs;
 
 						//
-					//	if (lowerUri.endsWith(".xml")) {
-							
-							List<DataEntry> entriesXmle = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
-							if (entriesXmle != null && !entriesXmle.isEmpty()) {
-								server.getFilePropertyCache().put(absolutePath, entriesXmle);
-							}
-						
-					//	} else if (lowerUri.endsWith(".properties")) {
-					
-							List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(filePath, projectUri,
-									configs);
-							if (entriesProperties != null && !entriesProperties.isEmpty()) {
-								server.getFilePropertyCache().put(absolutePath, entriesProperties);
-							}
-					//	}
+						//	if (lowerUri.endsWith(".xml")) {
+
+						List<DataEntry> entriesXmle = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
+						if (entriesXmle != null && !entriesXmle.isEmpty()) {
+							server.getFilePropertyCache().put(absolutePath, entriesXmle);
+						}
+
+						//	} else if (lowerUri.endsWith(".properties")) {
+
+						List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(filePath, projectUri,
+								configs);
+						if (entriesProperties != null && !entriesProperties.isEmpty()) {
+							server.getFilePropertyCache().put(absolutePath, entriesProperties);
+						}
+						//	}
 					}
 				}
 			}

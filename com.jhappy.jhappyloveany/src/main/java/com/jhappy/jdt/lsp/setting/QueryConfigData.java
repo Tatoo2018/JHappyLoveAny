@@ -1,6 +1,5 @@
 package com.jhappy.jdt.lsp.setting;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -9,8 +8,8 @@ import java.util.regex.Pattern;
 public class QueryConfigData {
 	
 	public Pattern pathPattern;
-	public List<String> xpaths;
-	public boolean trim;
+	public String xpath;
+	public boolean isTrim;
 	public String type;
 	public String searchRootPath;
 
