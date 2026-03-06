@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JHappyLoveAnyClient
 Bundle-SymbolicName: com.jhappy.jhappyloveany.client;singleton:=true
 Bundle-Version: 0.0.1.qualifier
+Eclipse-BundleShape: jar
 Bundle-Vendor: JHAPPY
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
