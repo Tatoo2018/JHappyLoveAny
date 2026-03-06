@@ -24,7 +24,7 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **📝 XPath Support:** Define target XML attributes using `XPath`, allowing flexibility for custom XML schemas. (e.g., `//@name`)
 - **🔀 Flexible Matching:** Toggle between Prefix (`starts with`) and Contains (`partial match`) modes for auto-completion.
 
-<a href="https://www.youtube.com/watch?v=k_hTIWZvwTE">
+<a href="https://www.youtube.com/watch?v=k_hTIWZvwTE" style="width:400px;display:block;">
   <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:100%; max-width:400px;">
 </a>
 
