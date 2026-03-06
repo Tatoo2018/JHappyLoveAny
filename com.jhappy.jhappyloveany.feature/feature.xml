@@ -33,7 +33,7 @@ THE SOFTWARE IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND
 
    <requires>
       <import plugin="org.eclipse.lsp4j" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.lsp4e" version="0.19.7" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.lsp4e" version="0.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.lsp4j.jsonrpc" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
