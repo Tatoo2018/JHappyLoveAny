@@ -25,9 +25,15 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **🔀 Flexible Matching:** Toggle between Prefix (`starts with`) and Contains (`partial match`) modes for auto-completion.
 
 
+
+
+## 📺 Watch the Tutorial on YouTube:
+
 <a href="https://www.youtube.com/watch?v=k_hTIWZvwTE" style="width:500px;display:block;">
   <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:400px; max-width:500px;">
 </a>
+
+[Click here to watch](https://www.youtube.com/watch?v=k_hTIWZvwTE)
 
 
 ![Usage Screenshots1](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
