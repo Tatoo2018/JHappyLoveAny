@@ -2,6 +2,7 @@ package com.jhappy.jhappyloveany.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +52,15 @@ public class JHappyLSPConnectionProvider extends ProcessStreamConnectionProvider
             }
             // bundleentry:// 形式から file:// 形式に変換
             java.net.URL fileUrl = FileLocator.toFileURL(bundleUrl);
-            return new File(fileUrl.getPath()).getAbsolutePath();
+            return new File(fileUrl.toURI()).getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
             return "";
-        }
+        } catch (URISyntaxException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			 return "";
+		}
     }
 	
 }
