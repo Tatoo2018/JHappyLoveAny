@@ -33,7 +33,7 @@ It eliminates the hassle of searching for key definitions manually, significantl
   <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:400px; max-width:500px;">
 </a>
 
-[Click here to watch](https://www.youtube.com/watch?v=k_hTIWZvwTE)
+[Click here to watch](https://www.youtube.com/watch?v=bfv7ef_t4lg)
 
 
 ### ✨ Screenshot
