@@ -24,9 +24,11 @@ It eliminates the hassle of searching for key definitions manually, significantl
 - **📝 XPath Support:** Define target XML attributes using `XPath`, allowing flexibility for custom XML schemas. (e.g., `//@name`)
 - **🔀 Flexible Matching:** Toggle between Prefix (`starts with`) and Contains (`partial match`) modes for auto-completion.
 
-<a href="https://www.youtube.com/watch?v=k_hTIWZvwTE" style="width:400px;display:block;">
-  <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:400px; max-width:400px;">
+
+<a href="https://www.youtube.com/watch?v=k_hTIWZvwTE" style="width:500px;display:block;">
+  <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:400px; max-width:500px;">
 </a>
+
 
 ![Usage Screenshots1](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
 
