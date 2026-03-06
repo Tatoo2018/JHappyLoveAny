@@ -36,6 +36,8 @@ It eliminates the hassle of searching for key definitions manually, significantl
 [Click here to watch](https://www.youtube.com/watch?v=k_hTIWZvwTE)
 
 
+### ✨ Screenshot
+
 ![Usage Screenshots1](https://github.com/user-attachments/assets/0925a84d-90c5-48f9-a09c-0a1db7f0038d)
 
 ![Usage Screenshots2](https://github.com/user-attachments/assets/8e6f3883-22ae-48fa-926e-de30af7ccbed)
