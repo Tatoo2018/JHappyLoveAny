@@ -30,7 +30,7 @@ It eliminates the hassle of searching for key definitions manually, significantl
 ## 📺 Watch the Tutorial on YouTube:
 
 <a href="https://www.youtube.com/watch?v=TDD1fWFYpc4" style="width:500px;display:block;">
-  <img src="https://img.youtube.com/vi/k_hTIWZvwTE/0.jpg" alt="Watch the video" style="width:400px; max-width:500px;">
+  <img src="https://img.youtube.com/vi/TDD1fWFYpc4/0.jpg" alt="Watch the video" style="width:400px; max-width:500px;">
 </a>
 
 [Click here to watch](https://www.youtube.com/watch?v=TDD1fWFYpc4)
