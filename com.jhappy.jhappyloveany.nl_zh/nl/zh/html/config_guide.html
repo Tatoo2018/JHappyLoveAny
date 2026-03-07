@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>JHappyLoveAny 配置指南</title>
+    <style>
+        body { font-family: "Microsoft YaHei", "SimSun", sans-serif; line-height: 1.6; padding: 20px; color: #333; }
+        h1 { color: #007acc; border-bottom: 2px solid #007acc; }
+        h2 { color: #333; margin-top: 25px; border-left: 5px solid #007acc; padding-left: 10px; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        pre { background-color: #f4f4f4; padding: 15px; border-left: 5px solid #ccc; overflow: auto; }
+        .note { background-color: #e7f3fe; border-left: 5px solid #2196F3; padding: 10px; margin: 20px 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f8f8f8; }
+        strong { color: #d9534f; }
+    </style>
+</head>
+<body>
+
+    <h1>JHappyLoveAny 配置指南</h1>
+    <p>本指南将介绍如何设置 <code>jhappyqueries.xml</code>，以便在项目中启用智能代码补全功能。</p>
+
+    <div class="note">
+        <strong>文件放置位置：</strong> 请将 <code>jhappyqueries.xml</code> 放置在 Eclipse 项目的<strong>根目录</strong>下。
+    </div>
+
+    <h2>1. XML 结构</h2>
+    <p>配置文件使用简单的 XML 格式，并包含用于验证的 DTD 定义。</p>
+    <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE queries [
+   &lt;!ELEMENT queries (#PCDATA|query)*&gt;
+   &lt;!ATTLIST queries completionMatch (prefix | contains) "contains"&gt;
+   &lt;!ELEMENT query (#PCDATA)&gt;
+   &lt;!ATTLIST query filepath CDATA #IMPLIED trim (yes | no) "yes" type (xml | properties) "xml" description CDATA #IMPLIED&gt;
+]&gt;
+&lt;queries completionMatch="contains"&gt;
+    &lt;!-- 在此处编写查询语句 --&gt;
+&lt;/queries&gt;</pre>
+
+    <h2>2. 查询属性详解</h2>
+    <table>
+        <tr>
+            <th>属性名</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td><code>filepath</code></td>
+            <td>用于指定目标文件的正则表达式（例如：<code>.*\.xml$</code>）。</td>
+        </tr>
+        <tr>
+            <td><code>type</code></td>
+            <td>文件格式：<code>xml</code> 或 <code>properties</code>。</td>
+        </tr>
+        <tr>
+            <td><code>trim</code></td>
+            <td>是否删除提取出的键（Key）前后的空格（默认值：<code>yes</code>）。</td>
+        </tr>
+        <tr>
+            <td><code>description</code></td>
+            <td>显示在项目属性界面表格中的简短说明文字。</td>
+        </tr>
+    </table>
+
+    <h2>3. 配置示例</h2>
+    <h3>XML 键补全（使用 XPath）</h3>
+    <p>要从 XML 属性（例如：<code>&lt;item id="my_key"&gt;</code>）中提取键，请在 CDATA 部分编写 XPath 表达式。</p>
+    <pre>&lt;query filepath=".*\.xml$" type="xml"&gt;&lt;![CDATA[//@id]]&gt;&lt;/query&gt;</pre>
+
+    <h3>Properties 文件补全</h3>
+    <p>对于标准的 <code>.properties</code> 文件，无需 XPath。仅需指定文件模式即可工作。</p>
+    <pre>&lt;query filepath="src/.*\.properties$" type="properties" /&gt;</pre>
+	
+	<h2>4. 项目设置界面</h2>
+    
+	<p><img src="images/screenshot7.jpg" width="400px"/></p>
+
+</body>
+</html>

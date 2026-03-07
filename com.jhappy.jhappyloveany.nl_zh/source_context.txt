@@ -1,3 +1,21 @@
+> 注記: このファイルはUTF-8で出力されています。各ソースファイルはEclipse上の個別の文字コード設定に基づいて読み込まれました。
+
+以下のソースコードをレビュー・解析してください。
+
+# プロジェクト構成 (目次)
+- /com.jhappy.jhappyloveany.feature/build.properties
+- /com.jhappy.jhappyloveany.feature/feature.xml
+- /com.jhappy.jhappyloveany.feature/pom.xml
+
+---
+
+## /com.jhappy.jhappyloveany.feature/build.properties
+```properties
+bin.includes = feature.xml
+```
+
+## /com.jhappy.jhappyloveany.feature/feature.xml
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.jhappy.jhappyloveany.feature"
@@ -52,3 +70,26 @@ THE SOFTWARE IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND
          version="0.0.0"/>
 
 </feature>
+```
+
+## /com.jhappy.jhappyloveany.feature/pom.xml
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+<packaging>eclipse-feature</packaging>
+
+
+  <artifactId>com.jhappy.jhappyloveany.feature</artifactId>
+
+  
+        <parent>
+        <groupId>jhappyloveany</groupId>
+        <artifactId>jhappyloveany.parent</artifactId>
+       <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+  
+</project>
+```
+

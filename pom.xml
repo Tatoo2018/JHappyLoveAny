@@ -19,9 +19,12 @@
     <modules>
         <module>com.jhappy.jhappyloveany</module>
         <module>com.jhappy.jhappyloveany.client</module>
+        <module>com.jhappy.jhappyloveany.nl_ja</module>
+        <module>com.jhappy.jhappyloveany.nl_zh</module>
         <module>com.jhappy.jhappyloveany.feature</module>
         <module>com.jhappy.jhappyloveany.updatesite</module>
         <module>com.jhappy.jhappyloveany.test</module>
+
     </modules>
 
     <repositories>
