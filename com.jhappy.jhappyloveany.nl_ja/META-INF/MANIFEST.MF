@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JHappy LoveAny Japanese Support
+Bundle-SymbolicName: com.jhappy.jhappyloveany.nl_ja
+Bundle-Version: 0.0.1.qualifier
+Eclipse-BundleShape: jar
+Bundle-Vendor: JHAPPY
+Fragment-Host: com.jhappy.jhappyloveany.client;bundle-version="0.0.1"
+Automatic-Module-Name: com.jhappy.jhappyloveany.nl.ja
+Bundle-RequiredExecutionEnvironment: JavaSE-17
