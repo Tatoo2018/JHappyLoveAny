@@ -3,7 +3,8 @@
   <groupId>com.jhappy.jhappyloveany.updatesite</groupId>
   <artifactId>com.jhappy.jhappyloveany.updatesite</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-   <packaging>eclipse-repository</packaging>
+  <packaging>eclipse-repository</packaging>
+  <name>JHappyloveany UPDATE SITE</name> 
   
    <parent>
         <groupId>jhappyloveany</groupId>
