@@ -40,10 +40,7 @@ public abstract class SimpleJDTBuildTest {
 	IProject project = null;
 	
     IFile samplejavafile = null;
-    
-	//テスト用のサンプルファイルが保存してあるフォルダ
-	public static String TEST_RESOURCES_FOLDER = "test-resources/samplefiles";
-    
+   
     public static String BUNDLE_NAME = "com.jhappy.jhappyloveany.test";
 
 	@AfterEach
