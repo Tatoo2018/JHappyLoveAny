@@ -33,12 +33,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * テストを行うため、Javaプロジェクトを生成し、サンプルファイルをコンパイルした環境を準備します。
+ * 実際のテストはexecTest()内に実装してください。
+ */
 @DisplayName("Integration Test: Setup Java Project")
 public abstract class SimpleJDTBuildTest {
 
-
+	// 作成されたプロジェクト
 	IProject project = null;
 	
+	//　環境構築時サンプル用に作成したJavaファイル　com/Hello.javaとして配置されます。
     IFile samplejavafile = null;
    
     public static String BUNDLE_NAME = "com.jhappy.jhappyloveany.test";

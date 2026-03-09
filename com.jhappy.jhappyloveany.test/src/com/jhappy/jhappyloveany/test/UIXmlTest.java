@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import com.jhappy.jhappyloveany.test.util.TestUtil;
 
+/**
+ * XMLファイルへの入力補完をテスト
+ * テストのためのリソースはtest-resources/samplefiles2を使用
+ */
 @DisplayName("UI XML Test: UIperformTest")
-
 class UIXmlTest extends SimpleJDTBuildTest {
 
 	@Test
@@ -20,7 +23,6 @@ class UIXmlTest extends SimpleJDTBuildTest {
 		TestUtil.doTest(BUNDLE_NAME,project, TEST_RESOURCES_FOLDER, "src/com/test/dir0/dir1/config_1.xml",
 				List.of("xml_f10", "xml_f101_e0", "xml_f200_e0"));
 
-		// ※ syncExec の外にあった Thread.sleep は削除しました
 	}
 
 	

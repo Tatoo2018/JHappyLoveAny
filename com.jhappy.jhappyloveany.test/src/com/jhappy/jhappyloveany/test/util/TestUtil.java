@@ -7,21 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -35,53 +29,25 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.osgi.framework.Bundle;
 
 /**
  * テスト用プラグイン内のリソースをワークスペースのプロジェクトにコピーするためのユーティリティ
  */
 public class TestUtil {
 
-    /**
-     * 指定したプラグイン内のパスから、ターゲットとなるEclipseリソース（Project等）へ再帰的にコピーします
-     * @param bundleId テストリソースが含まれるプラグインID
-     * @param sourcePath プラグイン内のパス（例: "test-resources/my-app"）
-     * @param targetContainer コピー先のプロジェクトやフォルダ
-     */
-    public static void copyBundleResources(String bundleId, String sourcePath, IContainer targetContainer) 
-            throws IOException, CoreException {
-        
-        Bundle bundle = Platform.getBundle(bundleId);
-        Enumeration<String> entries = bundle.getEntryPaths(sourcePath);
-
-        if (entries == null) return;
-
-        while (entries.hasMoreElements()) {
-            String entryPath = entries.nextElement();
-            String name = new Path(entryPath).lastSegment();
-
-            if (entryPath.endsWith("/")) {
-                // フォルダの場合
-                IFolder folder = targetContainer.getFolder(new Path(name));
-                if (!folder.exists()) {
-                    folder.create(true, true, null);
-                }
-                copyBundleResources(bundleId, entryPath, folder);
-            } else {
-                // ファイルの場合
-                IFile file = targetContainer.getFile(new Path(name));
-                URL url = bundle.getEntry(entryPath);
-                try (InputStream is = url.openStream()) {
-                    if (file.exists()) {
-                        file.setContents(is, true, true, null);
-                    } else {
-                        file.create(is, true, null);
-                    }
-                }
-            }
-        }
-    }
     
+    /**
+     * JUnitプラグインテストプロジェクトに存在するtestsrcfolderの内容を
+     * プロジェクトにコピーして、入力補完のテストを実行
+     * 
+     * @param bundleName
+     * @param project
+     * @param testsrcfolder　コピー元のフォルダ
+     * @param samplefile1　コピーできたか確認するため、コピー対象のファイルパスを指定してください。
+     * @param wordlist 入力補完をテストしたいキーワード、このキーワードをもとに、コピーしたリソースを解析した補完候補に対して、入力補完をトリガーします。
+     * @throws CoreException
+     * @throws IOException
+     */
     public static void doTest(String bundleName, IProject project, String testsrcfolder, String samplefile1, List<String> wordlist)
 			throws CoreException, IOException {
 
@@ -109,8 +75,8 @@ public class TestUtil {
 					String srcprefix = "package com.test;\n public class TestCompletion { \n";
 					String srcVarDeclaration1 = "public static String str1 = \"" + searchWord + "\";\n";
 					String srcVarDeclaration2 = "public static String str2 = \"" + "こんにちわ" + "\";\n";
-					String srcVarDeclaration3 = "public static String str3 = \"" + searchWord + "\";\n";
-					String srcVarDeclaration4 = "public static String str4 = \"" + searchWord + "\";\n";
+					String srcVarDeclaration3 = "public static String str3 = \"" + "Hello" + "\";\n";
+					String srcVarDeclaration4 = "public static String str4 = \"" + "你好" + "\";\n";
 					String srcsuffix = " public static void main(String[] args){\nSystem.out.println(str2);\n}\n}";
 
 					//入力補完をトリガーする位置を計算
@@ -211,13 +177,14 @@ public class TestUtil {
 
 						while (Display.getDefault().readAndDispatch())
 							;
-						Thread.sleep(1000);
+		
 
 					} else {
 						fail("SourceViewerを取得できませんでした。取得されたオブジェクト: " + viewer);
 					}
 
 				}
+				
 				//to check by human
 				long endTime = System.currentTimeMillis() + 2000;
 				Display display = Display.getDefault();
@@ -237,27 +204,12 @@ public class TestUtil {
 	}
 
 	/**
-	 * テストプラグイン内のリソースをプロジェクトへコピーする
-	 * @param sourcePathBundle テストプロジェクト内のパス (例: "test-resources/com/test")
-	 * @param targetPathProject コピー先のプロジェクト内パス (例: "src/resources")
+	 * @param project
+	 * @param path
+	 * @param content
+	 * @return
+	 * @throws CoreException
 	 */
-	void importResources(IProject project,String sourcePathBundle, String targetPathProject) throws Exception {
-		// 1. テストプロジェクト(Fragment)のBundleを取得 [cite: 66]
-		Bundle bundle = Platform.getBundle("com.jhappy.jhappyloveany.test");
-		URL directoryUrl = FileLocator.find(bundle, new Path(sourcePathBundle), null);
-
-		if (directoryUrl == null) {
-			throw new RuntimeException("Resource not found in bundle: " + sourcePathBundle);
-		}
-
-		// ファイルシステム上のパスに変換
-		File fileSystemDir = new File(FileLocator.toFileURL(directoryUrl).toURI());
-
-		if (fileSystemDir.isDirectory()) {
-			copyRecursive(project, fileSystemDir, targetPathProject);
-		}
-	}
-
 	public static IFile createFile(IProject project, String path, String content) throws CoreException {
 		IFile file = project.getFile(path);
 		InputStream source = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
@@ -272,6 +224,12 @@ public class TestUtil {
 		return file;
 	}
 
+	/**
+	 * @param project
+	 * @param sourceNode
+	 * @param targetPath
+	 * @throws Exception
+	 */
 	public static void copyRecursive(IProject project, File sourceNode, String targetPath) throws Exception {
 		if (sourceNode.isDirectory()) {
 			createFolderRecursively(project, targetPath); // 既存のフォルダ作成メソッドを利用 [cite: 103]
@@ -287,9 +245,13 @@ public class TestUtil {
 		}
 	}
 
+	
 	/**
-	* パス文字列（例: "src/main/java/com/test"）から深い階層のフォルダを一気に作成する
-	*/
+	 * @param project
+	 * @param folderPath
+	 * @return
+	 * @throws CoreException
+	 */
 	public static IFolder createFolderRecursively(IProject project, String folderPath) throws CoreException {
 		String[] segments = folderPath.split("/");
 		IFolder currentFolder = null;

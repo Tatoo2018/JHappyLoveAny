@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import com.jhappy.jhappyloveany.test.util.TestUtil;
 
-@DisplayName("UI Test: UIperformTest")
-
+/**
+ * プロパティファイルへの入力補完をテスト
+ * テストのためのリソースはtest-resources/samplefilesを使用
+ */
+@DisplayName("UI Test: UIPropertyTest")
 class UIPropertyTest extends SimpleJDTBuildTest {
 
 	@Test
@@ -20,7 +23,6 @@ class UIPropertyTest extends SimpleJDTBuildTest {
 		TestUtil.doTest(BUNDLE_NAME,project, TEST_RESOURCES_FOLDER, "src/com/test/complicatedtest_UTF8.properties",
 				List.of("unicode.test", "long.description", "テスト"));
 
-		// ※ syncExec の外にあった Thread.sleep は削除しました
 	}
 
 	
