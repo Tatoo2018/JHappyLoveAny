@@ -9,7 +9,7 @@ import com.jhappy.jhappyloveany.test.util.TestUtil;
 
 @DisplayName("UI Test: UIperformTest")
 
-class UIBasicTest extends SimpleJDTBuildTest {
+class UIPropertyTest extends SimpleJDTBuildTest {
 
 	@Test
 	public void execTest() throws Exception {
