@@ -19,7 +19,7 @@
 <queries completionMatch="contains">
 
      <query filepath=".*\.xml$" type="xml">
-        <![CDATA[//@id ]]>
+        <![CDATA[//@key ]]>
     </query>
 
     <query filepath=".*\.properties$" trim="yes" type="properties" />
