@@ -41,7 +41,8 @@ public class PropertyAndXmlGenerator {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write("# Generated Property File " + fileIndex + "\n");
             for (int j = 0; j < ENTRIES_PER_FILE; j++) {
-                // キーを全ファイルでユニークにする (e.g., prop_f10_e49)
+  
+            	// キーを全ファイルでユニークにする (e.g., prop_f10_e49)
                 String key = "prop_f" + fileIndex + "_e" + j;
                 writer.write(key + "=" + generateValue(j) + "\n");
             }
