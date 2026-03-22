@@ -1,1 +1,42 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSCode Extension - {{REPO_NAME}}</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2c3e50; color: #ecf0f1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: #ffffff; color: #2c3e50; padding: 2.5rem; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); max-width: 600px; width: 100%; text-align: center; border-top: 5px solid #007acc; }
+        h1 { font-size: 1.5rem; margin-top: 0; color: #007acc; }
+        .download-box { background: #f0f7ff; padding: 2rem; border-radius: 8px; margin: 1.5rem 0; border: 1px dashed #007acc; }
+        .file-info { font-family: 'Courier New', Courier, monospace; background: #e8e8e8; padding: 0.5rem; border-radius: 4px; display: block; margin-bottom: 1rem; font-size: 0.9rem; }
+        .download-btn { display: inline-block; background-color: #007acc; color: white; padding: 1rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: background-color 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .download-btn:hover { background-color: #005f9e; }
+        .instruction { text-align: left; font-size: 0.85rem; color: #7f8c8d; line-height: 1.6; margin-top: 1.5rem; border-top: 1px solid #eee; padding-top: 1rem; }
+        .home-link { display: inline-block; margin-top: 1.5rem; color: #3498db; text-decoration: none; font-size: 0.9rem; }
+        .home-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📦 VSCode Extension Download</h1>
+        <p>Branch: <strong>{{BRANCH_NAME}}</strong></p>
+
+        <div class="download-box">
+            <span class="file-info">{{VSIX_FILE}}</span>
+            <a href="{{VSIX_FILE}}" class="download-btn">📥 Download .vsix</a>
+        </div>
+
+        <div class="instruction">
+            <strong>How to install:</strong><br>
+            1. Download the <code>.vsix</code> file above.<br>
+            2. Open VSCode and go to the <strong>Extensions</strong> view (Ctrl+Shift+X).<br>
+            3. Click the <strong>"..."</strong> (More Actions) in the top-right corner.<br>
+            4. Select <strong>"Install from VSIX..."</strong> and choose the downloaded file.
+        </div>
+
+        <a href="{{HOME_URL}}" class="home-link">🏠 Back to {{REPO_NAME}} Homepage</a>
+    </div>
+</body>
+</html>
