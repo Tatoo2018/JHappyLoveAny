@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queries [
+   <!ELEMENT queries (#PCDATA|query)*>
+
+   <!ATTLIST queries
+    completionMatch (prefix | contains) "contains"
+    >
+
+  <!ELEMENT query (#PCDATA)>
+
+  <!ATTLIST query
+    filepath CDATA #REQUIRED
+    trim     (yes | no) "yes"
+    description CDATA #IMPLIED 
+    type (xml | properties) #REQUIRED
+    >
+]>
+
+<queries completionMatch="contains">
+
+     <query filepath=".*\.xml$" type="xml">
+        <![CDATA[//@id ]]>
+    </query>
+
+    <query filepath=".*\.properties$" trim="yes" type="properties" />
+
+
+</queries>

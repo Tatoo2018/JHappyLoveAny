@@ -1,0 +1,19 @@
+# --- VSCode / TypeScript Client 用 ---
+
+node_modules/
+
+# TypeScript のビルド出力フォルダ
+dist/
+
+
+
+*.tsbuildinfo
+
+# npm のログファイル
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# パッケージングされた拡張機能本体
+*.vsix
