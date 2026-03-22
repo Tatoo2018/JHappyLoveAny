@@ -80,8 +80,12 @@ jobs:
           sed -i "s|{{REPO_NAME}}|$REPO_NAME|g" $TARGET_PATH
           sed -i "s|{{HOME_URL}}|$HOME_URL|g" $TARGET_PATH
 
-      - name: 📄 Create VSCode Info HTML
+      - name: 📄 Create VSCode Temp Folder
         run: |
+          mkdir -p vsix_temp
+          
+          cp ${{ env.VSCODE_CLIENT_PATH }}/jhappy-lsp-client-*.vsix vsix_temp/
+
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
           HOME_URL="https://${{ github.repository_owner }}.github.io/${REPO_NAME}/"
           TEMPLATE_PATH=".github/workflows/vscode-site-index.html"
@@ -95,14 +99,11 @@ jobs:
           sed -i "s|{{BRANCH_NAME}}|${{ github.ref_name }}|g" $TARGET_PATH
           sed -i "s|{{VSIX_FILE}}|$VSIX_FILE|g" $TARGET_PATH
 
-      - name: Prepare Deployment Directory
+      - name: Prepare Deployment Directory For EclipseSite
         run: |
           mkdir -p eclipsesite_tmp
           cp -r ${{ env.REPOSITORY_PATH }}/* eclipsesite_tmp/
-          
-          #
-          mkdir -p vsix_temp
-          cp ${{ env.VSCODE_CLIENT_PATH }}/jhappy-lsp-client-*.vsix vsix_temp/
+      
 
       - name: Deploy Eclipse Update Site
         uses: JamesIves/github-pages-deploy-action@v4
