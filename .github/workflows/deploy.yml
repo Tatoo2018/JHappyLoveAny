@@ -80,6 +80,21 @@ jobs:
           sed -i "s|{{REPO_NAME}}|$REPO_NAME|g" $TARGET_PATH
           sed -i "s|{{HOME_URL}}|$HOME_URL|g" $TARGET_PATH
 
+      - name: 📄 Create VSCode Info HTML
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          HOME_URL="https://${{ github.repository_owner }}.github.io/${REPO_NAME}/"
+          TEMPLATE_PATH=".github/workflows/vscode-index.html"
+          TARGET_PATH="vsix_temp/index.html"
+          VSIX_FILE=$(ls ${{ env.VSCODE_CLIENT_PATH }}/jhappy-lsp-client-*.vsix | xargs basename)
+
+          # テンプレートをコピーして各変数を置換
+          cp $TEMPLATE_PATH $TARGET_PATH
+          sed -i "s|{{REPO_NAME}}|$REPO_NAME|g" $TARGET_PATH
+          sed -i "s|{{HOME_URL}}|$HOME_URL|g" $TARGET_PATH
+          sed -i "s|{{BRANCH_NAME}}|${{ github.ref_name }}|g" $TARGET_PATH
+          sed -i "s|{{VSIX_FILE}}|$VSIX_FILE|g" $TARGET_PATH
+
       - name: Prepare Deployment Directory
         run: |
           mkdir -p eclipsesite_tmp
