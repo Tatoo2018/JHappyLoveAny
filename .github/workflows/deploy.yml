@@ -12,9 +12,12 @@ on:
 permissions:
   contents: write
 
-  # Git Hub Pagesに公開する対象フォルダ
+  
 env:
+  # Git Hub Pagesに公開する対象フォルダ
   REPOSITORY_PATH: com.jhappy.jhappyloveany.updatesite/target/repository
+  # VSCode クライアントのディレクトリ名
+  VSCODE_CLIENT_PATH: com.jhappy.jhappyloveany.client.vscode
 
 jobs:
   build:
@@ -40,7 +43,28 @@ jobs:
             -Djdk.xml.maxGeneralEntitySizeLimit=0
             -Djdk.xml.totalEntitySizeLimit=0
             -Djdk.xml.entityExpansionLimit=0
-            
+      
+      
+      # --- 3. Node.js セットアップ (VSCode 用) ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ${{ env.VSCODE_CLIENT_PATH }}/package.json
+
+      # --- 4. VSCode VSIX パッケージング ---
+      - name: Package VSCode Extension
+        run: |
+          # ビルド済みのJAR (LSP Server) を VSCode フォルダへコピー 
+          mkdir -p ${{ env.VSCODE_CLIENT_PATH }}/server
+          cp com.jhappy.jhappyloveany/target/*-jar-with-dependencies.jar ${{ env.VSCODE_CLIENT_PATH }}/server/com.jhappy.jhappyloveany-jar-with-dependencies.jar
+          
+          cd ${{ env.VSCODE_CLIENT_PATH }}
+          npm install
+          npm run package
+          npx vsce package -o ../jhappy-lsp-client.vsix
+
       - name: 📄 Create Info HTML for Browser Access
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
