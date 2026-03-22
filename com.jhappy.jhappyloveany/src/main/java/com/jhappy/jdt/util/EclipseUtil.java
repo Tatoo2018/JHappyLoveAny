@@ -25,9 +25,7 @@ public class EclipseUtil {
 	 * が出力されるので、元のファイルと二重に存在することがあるので、このアウトプットフォルダを走査対象から除外すべき。
 	 * 逆にclassファイルを走査する場合は、このフォルダが走査対象になる
 	 * 通常はデフォルトで[bin]というフォルダのはず
-	 * @return
-	 */
-	/**
+
 	 * 指定されたプロジェクトフォルダのアウトプットディレクトリ（bin, target等）を判定します。
 	 * * @param targetUri 解析対象のプロジェクトルートURI
 	 * @return 除外すべきフォルダパスのセット（相対パス形式）
@@ -51,6 +49,7 @@ public class EclipseUtil {
 		if (Files.exists(classpathFilePath)) {
 			try {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				
 				// 外部エンティティ参照による攻撃を防ぐための安全な設定
 				factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
@@ -73,11 +72,14 @@ public class EclipseUtil {
 			}
 		}
 
-		// .classpathがない、または出力先が未定義の場合はデフォルト値をセット
+		// VScodeなど、出力先や無視すべきフォルダを.gitignoreなどから読み取りたいが
+		// それは未実装なのでデフォルト設定を固定で行う
 		if (outputFolders.isEmpty()) {
 			// Mavenなら target、標準Eclipseなら bin
 			outputFolders.add("bin");
 			outputFolders.add("target");
+			outputFolders.add("build"); // Gradle/VSCode用に追加
+	        outputFolders.add("node_modules");
 		}
 
 		return outputFolders;
