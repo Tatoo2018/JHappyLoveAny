@@ -18,6 +18,8 @@ env:
   REPOSITORY_PATH: com.jhappy.jhappyloveany.updatesite/target/repository
   # VSCode クライアントのディレクトリ名
   VSCODE_CLIENT_PATH: com.jhappy.jhappyloveany.client.vscode
+  # 成果物を一時的に集約するフォルダ
+  DEPLOY_STAGING_DIR: deploy_staging
 
 jobs:
   build:
@@ -63,7 +65,7 @@ jobs:
           cd ${{ env.VSCODE_CLIENT_PATH }}
           npm install
           npm run package
-          npx vsce package -o ../jhappy-lsp-client.vsix
+          npx vsce package
 
       - name: 📄 Create Info HTML for Browser Access
         run: |
@@ -78,17 +80,30 @@ jobs:
           sed -i "s|{{REPO_NAME}}|$REPO_NAME|g" $TARGET_PATH
           sed -i "s|{{HOME_URL}}|$HOME_URL|g" $TARGET_PATH
 
-      - name: Deploy to GitHub Pages
+      - name: Prepare Deployment Directory
+        run: |
+          mkdir -p eclipsesite_tmp
+          cp -r ${{ env.REPOSITORY_PATH }}/* eclipsesite_tmp/
+          
+          #
+          mkdir -p vsix_temp
+          cp ${{ env.VSCODE_CLIENT_PATH }}/jhappy-lsp-client-*.vsix vsix_temp/
+
+      - name: Deploy Eclipse Update Site
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          # 公開する成果物があるフォルダ
-          folder: ${{ env.REPOSITORY_PATH }}
-          # 公開専用の別ブランチ（勝手に作られます）
+          folder: eclipsesite_tmp
           branch: gh-pages
-          # ブランチによって保存先を自動変更する_
-          target-folder: updatesite/${{ github.ref_name }}
-          # 他のフォルダ（index.htmlなど）を消さないように設定
+          target-folder: updatesite/${{ github.ref_name }} # ブランチごとのフォルダを指定
+          clean: true 
+          single-commit: true
+
+      # Step B: VSCode VSIX のデプロイ
+      - name: Deploy VSCode VSIX
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: vsix_temp
+          branch: gh-pages
+          target-folder: vscode/${{ github.ref_name }} # VSCodeもブランチごとに分ける
           clean: true
-          
-          # 
           single-commit: true
