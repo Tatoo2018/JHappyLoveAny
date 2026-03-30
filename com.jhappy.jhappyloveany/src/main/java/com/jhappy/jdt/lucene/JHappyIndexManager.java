@@ -9,6 +9,8 @@ import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.KeywordTokenizer;
+import org.apache.lucene.analysis.icu.ICUNormalizer2Filter;
+import org.apache.lucene.analysis.icu.ICUTransformFilter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntPoint;
@@ -33,6 +35,8 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
+import com.ibm.icu.text.Normalizer2;
+import com.ibm.icu.text.Transliterator;
 import com.jhappy.jdt.lsp.DataEntry;
 
 public class JHappyIndexManager {
@@ -45,8 +49,12 @@ public class JHappyIndexManager {
 	    protected TokenStreamComponents createComponents(String fieldName) {
 	        // 文字列を分割しない
 	        Tokenizer source = new KeywordTokenizer();
-	        // ★ 保存する前に小文字に変換する
-	        TokenStream filter = new org.apache.lucene.analysis.cjk.CJKWidthFilter(source);
+	        
+	        TokenStream filter = new ICUTransformFilter(source, Transliterator.getInstance("Hiragana-Katakana"));
+	        
+	        
+	        filter = new ICUNormalizer2Filter(filter, 
+		            Normalizer2.getInstance(null, "nfkc_cf", Normalizer2.Mode.COMPOSE));
 	        
 	        // 2. 小文字に変換する
 	        filter = new LowerCaseFilter(filter);
@@ -155,23 +163,21 @@ public class JHappyIndexManager {
 	    return finalResults;
 	}
 	
-	/**
-	 * 検索文字列をアナライザーと同じルール（CJKWidthFilter + LowerCase）で正規化する
-	 */
-	private String normalizeText(String text) throws IOException {
-	    if (text == null) return "";
-	    StringBuilder sb = new StringBuilder();
-	    try (TokenStream ts = analyzer.tokenStream(null, new java.io.StringReader(text))) {
-	        ts.reset();
-	        org.apache.lucene.analysis.tokenattributes.CharTermAttribute termAttr = 
-	            ts.addAttribute(org.apache.lucene.analysis.tokenattributes.CharTermAttribute.class);
-	        while (ts.incrementToken()) {
-	            sb.append(termAttr.toString());
-	        }
-	        ts.end();
-	    }
-	    return sb.toString();
-	}
+	public String normalizeText(String text) throws IOException {
+		    if (text == null) return "";
+		    StringBuilder sb = new StringBuilder();
+		    // この ts を通すことで、ユーザーの入力「あいう」が「アイウ」として抽出されます
+		    try (TokenStream ts = analyzer.tokenStream(null, new java.io.StringReader(text))) {
+		        ts.reset();
+		        org.apache.lucene.analysis.tokenattributes.CharTermAttribute termAttr = 
+		            ts.addAttribute(org.apache.lucene.analysis.tokenattributes.CharTermAttribute.class);
+		        while (ts.incrementToken()) {
+		            sb.append(termAttr.toString());
+		        }
+		        ts.end();
+		    }
+		    return sb.toString();
+		}
 
 	/**
 	 * 特定のフィールドに対して検索を行い、結果リストに追加する補助メソッド
