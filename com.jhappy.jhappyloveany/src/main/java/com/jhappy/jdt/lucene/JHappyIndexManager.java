@@ -41,13 +41,14 @@ import com.jhappy.jdt.lsp.DataEntry;
 
 public class JHappyIndexManager {
 
-	private final Directory directory = new ByteBuffersDirectory(); // メモリ内インデックス
+	private final Directory directory = new ByteBuffersDirectory();
 
 	// JHappyIndexManager.java
 	private final Analyzer analyzer = new Analyzer() {
 	    @Override
 	    protected TokenStreamComponents createComponents(String fieldName) {
-	        // 文字列を分割しない
+	    	
+	        //
 	        Tokenizer source = new KeywordTokenizer();
 	        
 	        TokenStream filter = new ICUTransformFilter(source, Transliterator.getInstance("Hiragana-Katakana"));
@@ -56,7 +57,7 @@ public class JHappyIndexManager {
 	        filter = new ICUNormalizer2Filter(filter, 
 		            Normalizer2.getInstance(null, "nfkc_cf", Normalizer2.Mode.COMPOSE));
 	        
-	        // 2. 小文字に変換する
+	      
 	        filter = new LowerCaseFilter(filter);
 	        
 	        return new TokenStreamComponents(source, filter);
@@ -211,7 +212,8 @@ public class JHappyIndexManager {
 	        case CONTAINS:
 	            return new WildcardQuery(new Term(field, "*" + text + "*"));
 	        case FUZZY:
-	            // 編集距離2の曖昧検索
+	        	//fuzzy logic is not completed yet
+	  
 	          // return new FuzzyQuery(new Term(field, text), 2);
 	        	BooleanQuery.Builder builder = new BooleanQuery.Builder();
 	            
@@ -228,32 +230,10 @@ public class JHappyIndexManager {
 	    }
 	}
 
-	// 内部用：前方一致クエリ
-	private Query buildBooleanPrefixQuery(String text) {
-		BooleanQuery.Builder builder = new BooleanQuery.Builder();
-		builder.add(new PrefixQuery(new Term("key", text)), BooleanClause.Occur.SHOULD);
-		builder.add(new PrefixQuery(new Term("value", text)), BooleanClause.Occur.SHOULD);
-		return builder.build();
-	}
-
-	// 内部用：ワイルドカード（部分一致）
-	private Query buildWildcardQuery(String text) {
-		BooleanQuery.Builder builder = new BooleanQuery.Builder();
-		builder.add(new WildcardQuery(new Term("key", text)), BooleanClause.Occur.SHOULD);
-		builder.add(new WildcardQuery(new Term("value", text)), BooleanClause.Occur.SHOULD);
-		return builder.build();
-	}
-
-	// 内部用：Fuzzy（曖昧）
-	private Query buildFuzzyQuery(String text) {
-		BooleanQuery.Builder builder = new BooleanQuery.Builder();
-		// 最後の引数(2)は最大編集距離（何文字までの違いを許容するか）
-		builder.add(new FuzzyQuery(new Term("key", text), 2), BooleanClause.Occur.SHOULD);
-		return builder.build();
-	}
+	
 
 	private DataEntry mapDocToEntry(Document doc) {
-		// 既存の DataEntry コンストラクタに適合させる [cite: 3, 4]
+	
 		return new DataEntry(
 				doc.get("key"),
 				doc.get("value"),
@@ -265,6 +245,6 @@ public class JHappyIndexManager {
 	public enum MatchType {
 		PREFIX, // 前方一致
 		CONTAINS, // 部分一致（中間一致）
-		FUZZY // あいまい検索（綴りミス許容）
+		FUZZY // あいまい検索（綴りミス許容）<<開発中
 	}
 }
