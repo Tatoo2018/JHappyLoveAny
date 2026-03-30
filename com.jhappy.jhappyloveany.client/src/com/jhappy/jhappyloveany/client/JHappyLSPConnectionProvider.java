@@ -24,7 +24,7 @@ public class JHappyLSPConnectionProvider extends ProcessStreamConnectionProvider
         commands.add(javaExecutable);
         
         // ★ システムプロパティ "jhappy.debug" が "true" の場合のみデバッグ有効
-        if (true) {
+        if (Boolean.getBoolean("jhappy.debug")) {
             // ポート8000で待機。suspend=yにすると接続されるまで停止、nならそのまま起動
             commands.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000");
             System.out.println("★ LSP Server Debug Mode ENABLED on port 8000 ★");
