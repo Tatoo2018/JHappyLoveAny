@@ -3,7 +3,7 @@
    <!ELEMENT queries (#PCDATA|query)*>
 
    <!ATTLIST queries
-    completionMatch (prefix | contains) "contains"
+    completionMatch (prefix | contains | fuzzy) "prefix"
     >
 
   <!ELEMENT query (#PCDATA)>
@@ -11,18 +11,18 @@
   <!ATTLIST query
     filepath CDATA #REQUIRED
     trim     (yes | no) "yes"
-    description CDATA #IMPLIED 
+    description CDATA #IMPLIED
     type (xml | properties) #REQUIRED
     >
 ]>
 
 <queries completionMatch="contains">
 
-     <query filepath=".*\.xml$" type="xml">
-        <![CDATA[//@id ]]>
+     <query filepath="src/.*/[^/]+\.xml$" type="xml">
+        <![CDATA[//@key ]]>
     </query>
 
-    <query filepath="src\/[^\/]+\.properties$" trim="yes" type="properties" />
+    <query filepath="src/.*/[^/]+\.properties$$" trim="yes" type="properties" />
 
 
 </queries>

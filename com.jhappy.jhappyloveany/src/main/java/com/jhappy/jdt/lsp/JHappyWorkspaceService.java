@@ -1,5 +1,6 @@
 package com.jhappy.jdt.lsp;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -83,14 +84,19 @@ public class JHappyWorkspaceService implements WorkspaceService {
 				}
 
 				String absolutePath = filePath.toAbsolutePath().toString();
+				try {
+					server.getIndexManager().removeFileIndex(absolutePath);
+				} catch (IOException e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
+				}
+
 
 				if (event.getType() == FileChangeType.Deleted) {
 
-					server.getFilePropertyCache().remove(absolutePath);
 
 				} else {
 
-					server.getFilePropertyCache().remove(absolutePath);
 
 					QuerySetting querySetting = server.getProjectQueryConfigs()
 							.get(projectUri.toAbsolutePath().toString());
@@ -104,15 +110,31 @@ public class JHappyWorkspaceService implements WorkspaceService {
 
 						List<DataEntry> entriesXmle = JHappyXmlScanner.loadXmlFile(filePath, projectUri, configs);
 						if (entriesXmle != null && !entriesXmle.isEmpty()) {
-							server.getFilePropertyCache().put(absolutePath, entriesXmle);
+						
+							//server.getFilePropertyCache().put(absolutePath, entriesXmle);
+							try {
+								server.getIndexManager().updateIndex(absolutePath, entriesXmle);
+							} catch (IOException e) {
+							  
+								e.printStackTrace();
+								
+							}
 						}
+						
 
 						//	} else if (lowerUri.endsWith(".properties")) {
 
 						List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(filePath, projectUri,
 								configs);
 						if (entriesProperties != null && !entriesProperties.isEmpty()) {
-							server.getFilePropertyCache().put(absolutePath, entriesProperties);
+						//	server.getFilePropertyCache().put(absolutePath, entriesProperties);
+							try {
+								server.getIndexManager().updateIndex(absolutePath, entriesProperties);
+							} catch (IOException e) {
+							  
+								e.printStackTrace();
+								
+							}
 						}
 						//	}
 					}

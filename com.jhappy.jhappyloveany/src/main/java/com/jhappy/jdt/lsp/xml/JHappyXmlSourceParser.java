@@ -54,7 +54,7 @@ public class JHappyXmlSourceParser {
 				for (int i = 0; i < attributes.getLength(); i++) {
 					el.setAttributeNS(attributes.getURI(i), attributes.getQName(i), attributes.getValue(i));
 				}
-				// 行番号を保存 (1-based)
+				// 行番号を保存
 				el.setUserData(LINE_NUMBER_KEY, locator.getLineNumber(), null);
 
 				if (elementStack.isEmpty())

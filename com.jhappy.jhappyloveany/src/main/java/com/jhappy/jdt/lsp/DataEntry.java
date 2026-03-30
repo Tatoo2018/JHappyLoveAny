@@ -23,6 +23,16 @@ public  class DataEntry {
 	public int lineNumber;
 
 	public String type;
+	
+	private String matchedField; 
+
+	public void setMatchedField(String matchedField) {
+	    this.matchedField = matchedField;
+	}
+
+	public String getMatchedField() {
+	    return matchedField;
+	}
 
 	/**
 	 * @param key
@@ -73,8 +83,7 @@ public  class DataEntry {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		DataEntry that = (DataEntry) o;
-		// filePath, key, lineNumber が一致すれば同一とみなす
-		// (valueは変更される可能性があるため、一意性の判定には含めないのが一般的です)
+
 		return lineNumber == that.lineNumber &&
 				java.util.Objects.equals(key, that.key) &&
 				java.util.Objects.equals(filePath, that.filePath);
