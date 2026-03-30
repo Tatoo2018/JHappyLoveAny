@@ -21,7 +21,7 @@ class UIPropertyTest extends SimpleJDTBuildTest {
 		final String TEST_RESOURCES_FOLDER = "test-resources/samplefiles";
 
 		TestUtil.doTest(BUNDLE_NAME,project, TEST_RESOURCES_FOLDER, "src/com/test/complicatedtest_UTF8.properties",
-				List.of("unicode.test", "long.description", "テスト"));
+				List.of("unicode.test", "long.description", "テスト","あいうえお","ｱｲｳｴｵ","あｲうエお","かｷクけコ","ｶｷｸｹｺ","カキクケコ","ＪＨＡＰＰＹ","jhappy","JHAPPY","01234","０１２３４"));
 
 	}
 
