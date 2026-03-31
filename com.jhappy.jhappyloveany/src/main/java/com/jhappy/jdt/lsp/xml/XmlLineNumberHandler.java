@@ -42,13 +42,12 @@ public class XmlLineNumberHandler extends DefaultHandler {
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
+
 		elementStack.push(qName);
-		characters.setLength(0); // 中身をリセット
+		characters.setLength(0); 
 
-		// パスを構築 (例: /project/artifactId)
+
 		String currentPath = "/" + String.join("/", elementStack);
-
-		// 属性値もキャッシュしたい場合の処理
 		for (int i = 0; i < attributes.getLength(); i++) {
 			String attrPath = currentPath + "/@" + attributes.getQName(i);
 

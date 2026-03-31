@@ -1,5 +1,6 @@
 package com.jhappy.jdt.lsp;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +41,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
 
 import com.jhappy.jdt.lsp.setting.QuerySetting;
+import com.jhappy.jdt.lucene.JHappyIndexManager;
 import com.jhappy.jdt.util.JDTUtil;
 import com.jhappy.jdt.util.StringUtils;
 
@@ -56,7 +58,6 @@ public class JHappyTextDocumentService implements TextDocumentService {
 
 	private final Map<String, String> docs = new ConcurrentHashMap<>();
 
-
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
 
@@ -67,10 +68,10 @@ public class JHappyTextDocumentService implements TextDocumentService {
 		try {
 			filePath = java.nio.file.Paths.get(new java.net.URI(uri));
 		} catch (URISyntaxException e) {
-			server.logError("failed load uri : " + uri , e);
+			server.logError("failed load uri : " + uri, e);
 			return emptyResult();
 		}
-		
+
 		Path projectRootUri = server.findProjectUriFor(filePath);
 
 		String content = docs.get(uri);
@@ -78,7 +79,7 @@ public class JHappyTextDocumentService implements TextDocumentService {
 		if (content == null) {
 			return emptyResult();
 		}
-		
+
 		//
 		CompilationUnit cu = createCompilationUnit(content);
 
@@ -88,29 +89,45 @@ public class JHappyTextDocumentService implements TextDocumentService {
 		ASTNode node = NodeFinder.perform(cu, offset, 0);
 
 		StringLiteral literalStringNode = JDTUtil.findStringLiteral(node);
-		
+
 		if (literalStringNode != null) {
 
 			Range rangeToReplace = createRange(cu, literalStringNode.getStartPosition() + 1,
 					literalStringNode.getStartPosition() + literalStringNode.getLength() - 1);
 
 			//補完対象の入力中文字列
-			
+
 			String prefix = getEditingString(content, offset, literalStringNode);
 			String prefixOfLower = prefix.toLowerCase();
 
 			List<CompletionItem> items = new ArrayList<>();
-			
-			int count = 0; 
-	        int limit = 200;
-	    	QuerySetting setting = server.getProjectQueryConfigs().get(projectRootUri.toAbsolutePath().toString());
 
-			for (DataEntry entry : server.getAllProperties() ) {
-				
+			int count = 0;
+			int limit = 200;
+			QuerySetting setting = server.getProjectQueryConfigs().get(projectRootUri.toAbsolutePath().toString());
+
+			JHappyIndexManager.MatchType matchType = JHappyIndexManager.MatchType.PREFIX;
+			if (setting != null && "contains".equals(setting.completionMatch)) {
+				matchType = JHappyIndexManager.MatchType.CONTAINS;
+			}else if(setting != null && "fuzzy".equals(setting.completionMatch)){
+				matchType = JHappyIndexManager.MatchType.FUZZY;
+			}
+
+			// 以前の全件ループ [cite: 109] を以下に置き換え
+			List<DataEntry> matchedEntries;
+			try {
+				matchedEntries = server.getIndexManager().search(prefix, matchType, 200);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return emptyResult();
+			}
+
+			for (DataEntry entry : matchedEntries) {
+
 				// ★ 上限に達したらループを抜ける
-	            if (count >= limit) {
-	                break;
-	            }
+				if (count >= limit) {
+					break;
+				}
 
 				String completionKey = entry.key;
 				String completionValue = entry.value;
@@ -119,51 +136,43 @@ public class JHappyTextDocumentService implements TextDocumentService {
 				String completionType = entry.type;
 				int completionLineNumber = entry.lineNumber;
 				CompletionItemKind completionItemType = getCompletionItemKind(completionType);
-				
 
-				boolean keyMatch = false;
-				boolean valueMatch = false;
-				if (setting != null && "contains".equals(setting.completionMatch)) {
-					keyMatch = completionKey.toLowerCase().contains(prefixOfLower);
-					valueMatch = completionValue.toLowerCase().contains(prefixOfLower);
+				String matchedField = entry.getMatchedField();
+
+				String completionLabel;
+				if ("key".equals(matchedField)) {
+					completionLabel = entry.key; // KeyでヒットしたならKeyを表示
 				} else {
-					keyMatch = completionKey.toLowerCase().startsWith(prefixOfLower);
-					valueMatch = completionValue.toLowerCase().startsWith(prefixOfLower);
+					completionLabel = entry.value; // ValueでヒットしたならValueを表示
 				}
 
-				String completionLabel = "";
-				if (keyMatch) {
-					completionLabel = completionKey.replace("\n", " ").replace("\r", " ");
-				} else if (valueMatch) {
-					completionLabel = completionValue.replace("\n", " ").replace("\r", " ");
-				}
+				String escapedText = StringUtils.escapeMinimal(completionKey);
 
-				if (keyMatch || valueMatch) {
+				CompletionItem item = new CompletionItem();
+				item.setLabel(completionLabel);
+				item.setTextEdit(Either.forLeft(new TextEdit(rangeToReplace, escapedText)));
+				
+				item.setFilterText(prefix);
+				item.setInsertText(escapedText);
 
-					String escapedText = StringUtils.escapeMinimal(completionKey);
+				item.setKind(completionItemType);
+				item.setSortText(("key".equals(matchedField) ? "001_" : "002_") + completionKey);
 
-					CompletionItem item = new CompletionItem();
-					item.setLabel(completionLabel);
-					item.setTextEdit(Either.forLeft(new TextEdit(rangeToReplace, escapedText)));
+				CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
+				labelDetails.setDetail(" - " + completionFileName + " (" + completionType + ")");
+				item.setLabelDetails(labelDetails);
 
-					item.setKind(completionItemType);
-					item.setSortText((keyMatch ? "001_" : "002_") + completionKey);
+				String displayValue = converToMarkdown(completionValue);
 
-					CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
-					labelDetails.setDetail(" - " + completionFileName + " (" + completionType + ")");
-					item.setLabelDetails(labelDetails);
+				MarkupContent markup = new MarkupContent();
+				markup.setKind(MarkupKind.MARKDOWN);
+				markup.setValue(createMarkDown(completionKey, completionFilePath, completionLineNumber,
+						displayValue));
 
-					String displayValue = converToMarkdown(completionValue);
+				item.setDocumentation(markup);
 
-					MarkupContent markup = new MarkupContent();
-					markup.setKind(MarkupKind.MARKDOWN);
-					markup.setValue(createMarkDown(completionKey, completionFilePath, completionLineNumber,
-							displayValue));
+				items.add(item);
 
-					item.setDocumentation(markup);
-
-					items.add(item);
-				}
 			}
 			return CompletableFuture.completedFuture(Either.forLeft(items));
 		}
@@ -184,8 +193,6 @@ public class JHappyTextDocumentService implements TextDocumentService {
 		return completionType;
 	}
 
-	
-
 	@Override
 	public CompletableFuture<Hover> hover(HoverParams params) {
 
@@ -197,25 +204,31 @@ public class JHappyTextDocumentService implements TextDocumentService {
 			if (content == null) {
 				return null;
 			}
-			
 
 			CompilationUnit cu = createCompilationUnit(content);
 			Position pos = params.getPosition();
-			
+
 			int offset = cu.getPosition(pos.getLine() + 1, pos.getCharacter());
 
 			String key = JDTUtil.getStringLiteralValueAt(cu, offset);
-			
+
 			if (key == null)
 				return null;
 
-			// キャッシュから検索
-			List<DataEntry> matches = server.getAllProperties().stream()
-					.filter(e -> e.key.equals(key))
-					.collect(Collectors.toList());
+//			// キャッシュから検索
+//			List<DataEntry> matches = server.getAllProperties().stream()
+//					.filter(e -> e.key.equals(key))
+//					.collect(Collectors.toList());
+
+			List<DataEntry> matches = new ArrayList<DataEntry>();
+			try {
+				matches = server.getIndexManager().searchExact(key);
+			} catch (IOException e1) {
+				return null;
+			}
 
 			if (!matches.isEmpty()) {
-				
+
 				StringBuilder markdown = new StringBuilder();
 
 				for (DataEntry entry : matches) {
@@ -263,32 +276,39 @@ public class JHappyTextDocumentService implements TextDocumentService {
 
 			//
 			CompilationUnit cu = createCompilationUnit(content);
-			
+
 			int offset = cu.getPosition(params.getPosition().getLine() + 1, params.getPosition().getCharacter());
-			
+
 			String literalString = JDTUtil.getStringLiteralValueAt(cu, offset);
 
 			if (literalString != null) {
 
-				List<Location> locations = server.getAllProperties().stream()
-						
-						.filter(entry -> entry.key.equals(literalString) || entry.value.equals(literalString))
-						
-						.map(entry -> {
-						
-							Range range = new Range(new Position(entry.lineNumber, 0),
-									new Position(entry.lineNumber, literalString.length()));
+				try {
+					List<DataEntry> matches = server.getIndexManager().searchExact(literalString);
 
-							Path path = Paths.get(entry.filePath);
+					List<Location> locations = matches.stream()
 
-							String safeUri = path.toUri().toString();
-							Location location = new Location(safeUri, range);
+							.filter(entry -> entry.key.equals(literalString) || entry.value.equals(literalString))
 
-							return location;
-						})
-						.collect(Collectors.toList());
+							.map(entry -> {
 
-				return Either.forLeft(locations);
+								Range range = new Range(new Position(entry.lineNumber, 0),
+										new Position(entry.lineNumber, literalString.length()));
+
+								Path path = Paths.get(entry.filePath);
+
+								String safeUri = path.toUri().toString();
+								Location location = new Location(safeUri, range);
+
+								return location;
+							})
+							.collect(Collectors.toList());
+
+					return Either.forLeft(locations);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			return null;
 		});
@@ -322,7 +342,7 @@ public class JHappyTextDocumentService implements TextDocumentService {
 
 		return displayValue;
 	}
-	
+
 	/**
 	 * @param completionKey
 	 * @param completionFilePath
@@ -348,13 +368,13 @@ public class JHappyTextDocumentService implements TextDocumentService {
 	 * @return
 	 */
 	private String getEditingString(String content, int offset, StringLiteral literalNode) {
-		
+
 		// リテラルの開始位置（ダブルクォートの位置）
 		int literalStart = literalNode.getStartPosition();
 
 		// カーソルがダブルクォートの直後、またはリテラル内にある場合
 		if (offset > literalStart) {
-			
+
 			// literalNode.getLiteralValue() は「リテラル全体の確定値」を返します。
 			// 入力途中の値を正確に取るため、開始からカーソル位置までの「生文字列」を一度切り出します。
 			String rawSubString = content.substring(literalStart + 1, offset);
@@ -374,8 +394,6 @@ public class JHappyTextDocumentService implements TextDocumentService {
 				new Position(cu.getLineNumber(start) - 1, cu.getColumnNumber(start)),
 				new Position(cu.getLineNumber(end) - 1, cu.getColumnNumber(end)));
 	}
-
-	
 
 	/**
 	 * @return

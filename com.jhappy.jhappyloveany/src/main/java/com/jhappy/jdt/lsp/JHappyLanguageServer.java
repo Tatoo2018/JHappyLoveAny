@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +50,7 @@ import com.jhappy.jdt.lsp.properties.PropertiesScanner;
 import com.jhappy.jdt.lsp.setting.QueryConfig;
 import com.jhappy.jdt.lsp.setting.QuerySetting;
 import com.jhappy.jdt.lsp.xml.JHappyXmlScanner;
+import com.jhappy.jdt.lucene.JHappyIndexManager;
 import com.jhappy.jdt.util.EclipseUtil;
 
 /**
@@ -68,11 +68,11 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 	private List<WorkspaceFolder> workspaceFolderList = new ArrayList<WorkspaceFolder>();
 
-	private final Map<String, List<DataEntry>> filePropertyCache = new ConcurrentHashMap<>();
+//	private final Map<String, List<DataEntry>> filePropertyCache = new ConcurrentHashMap<>();
 
-	public Map<String, List<DataEntry>> getFilePropertyCache() {
-		return filePropertyCache;
-	}
+//	public Map<String, List<DataEntry>> getFilePropertyCache() {
+//		return filePropertyCache;
+//	}
 
 	public Map<String, QuerySetting> getProjectQueryConfigs() {
 		return projectQueryConfigs;
@@ -84,6 +84,12 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 
 	public void setWorkspaceFolderList(List<WorkspaceFolder> workspaceFolderList) {
 		this.workspaceFolderList = workspaceFolderList;
+	}
+	
+	private final JHappyIndexManager indexManager = new JHappyIndexManager();
+
+	public JHappyIndexManager getIndexManager() {
+		return indexManager;
 	}
 
 	/**
@@ -269,13 +275,15 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 	public void scanAllFiles() {
 
 		try {
+			
+			getIndexManager().clearAll();
 
 			for (WorkspaceFolder workspaceFolder : workspaceFolderList) {
 
 				Path rootPath = Paths.get(new URI(workspaceFolder.getUri()));
 
 				String rootPathStr = rootPath.toAbsolutePath().toString();
-				filePropertyCache.keySet().removeIf(key -> key.startsWith(rootPathStr));
+				//filePropertyCache.keySet().removeIf(key -> key.startsWith(rootPathStr));
 
 				Set<String> excludes = EclipseUtil.getOutputFolders(rootPath.toAbsolutePath().toString());
 
@@ -328,6 +336,7 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 	 */
 	private void scan(Path rootPath, Set<String> excludes, QuerySetting querySetting) throws IOException {
 
+
 		if (Files.exists(rootPath)) {
 
 			if (querySetting != null) {
@@ -356,13 +365,27 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 								//if (path.toString().toLowerCase().endsWith(".xml")) {
 								List<DataEntry> entriesXml = JHappyXmlScanner.loadXmlFile(path, rootPath, configs);
 								if (entriesXml != null && !entriesXml.isEmpty()) {
-									filePropertyCache.put(absolutePath, entriesXml);
+								//	filePropertyCache.put(absolutePath, entriesXml);
+									try {
+										getIndexManager().updateIndex(absolutePath, entriesXml);
+									} catch (IOException e) {
+									  
+										e.printStackTrace();
+										
+									}
 								}
 								//	} else {
 								List<DataEntry> entriesProperties = PropertiesScanner.loadPropertyFile(path, rootPath,
 										configs);
 								if (entriesProperties != null && !entriesProperties.isEmpty()) {
-									filePropertyCache.put(absolutePath, entriesProperties);
+								//	filePropertyCache.put(absolutePath, entriesProperties);
+									try {
+										getIndexManager().updateIndex(absolutePath, entriesProperties);
+									} catch (IOException e) {
+									  
+										e.printStackTrace();
+										
+									}
 								}
 								//}
 							});
@@ -400,12 +423,12 @@ public class JHappyLanguageServer implements LanguageServer, LanguageClientAware
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
-	public List<DataEntry> getAllProperties() {
-		return filePropertyCache.values().stream().flatMap(List::stream).collect(java.util.stream.Collectors.toList());
-	}
+//	/**
+//	 * @return
+//	 */
+//	public List<DataEntry> getAllProperties() {
+//		return filePropertyCache.values().stream().flatMap(List::stream).collect(java.util.stream.Collectors.toList());
+//	}
 
 	/**
 	 * @param targetUri
