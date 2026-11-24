@@ -15,7 +15,7 @@ public class JHappyLSPConnectionProvider2 implements StreamConnectionProvider {
 
     @Override
     public void start() throws IOException {
-        // 別で起動しているLSPサーバーのポート（例: 5007）に接続しにいく
+        // 別で起動しているLSPサーバーのポート（例: 5007）に接続
         try {
             socket = new Socket("localhost", 5007);
             inputStream = socket.getInputStream();
